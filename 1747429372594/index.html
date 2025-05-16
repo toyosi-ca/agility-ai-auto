@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        main {
+            padding: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .test-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 5px;
+            width: 200px;
+            text-align: center;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Test Management Application</h1>
+</header>
+<main id="app"></main>
+
+<script>
+    class App {
+        constructor() {
+            this.state = {
+                users: [],
+                currentUser: null,
+                tests: [],
+            };
+            this.init();
+        }
+
+        init() {
+            this.loadFromLocalStorage();
+            this.render();
+        }
+
+        loadFromLocalStorage() {
+            const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+            const storedTests = JSON.parse(localStorage.getItem('tests')) || [];
+            this.state.users = storedUsers;
+            this.state.tests = storedTests;
+        }
+
+        saveToLocalStorage() {
+            localStorage.setItem('users', JSON.stringify(this.state.users));
+            localStorage.setItem('tests', JSON.stringify(this.state.tests));
+        }
+
+        registerUser(email) {
+            if (!this.state.users.some(user => user.email === email)) {
+                this.state.users.push({ email });
+                this.saveToLocalStorage();
+                alert('Registration successful!');
+            } else {
+                alert('User already registered.');
+            }
+        }
+
+        loginUser(email) {
+            const user = this.state.users.find(user => user.email === email);
+            if (user) {
+                this.state.currentUser = user;
+                alert('Login successful!');
+                this.render();
+            } else {
+                alert('User not found.');
+            }
+        }
+
+        createTest(title) {
+            this.state.tests.push({ title, createdBy: this.state.currentUser.email });
+            this.saveToLocalStorage();
+            this.render();
+        }
+
+        render() {
+            if (this.state.currentUser) {
+                this.renderDashboard();
+            } else {
+                this.renderLogin();
+            }
+        }
+
+        renderLogin() {
+            document.getElementById('app').innerHTML = `
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                    <button type="submit">Login</button>
+                </form>
+                <h2>Register</h2>
+                <form id="registerForm">
+                    <input type="email" id="registerEmail" placeholder="Email" required>
+                    <button type="submit">Register</button>
+                </form>
+            `;
+            document.getElementById('loginForm').onsubmit = (e) => {
+                e.preventDefault();
+                this.loginUser(e.target.loginEmail.value);
+            };
+            document.getElementById('registerForm').onsubmit = (e) => {
+                e.preventDefault();
+                this.registerUser(e.target.registerEmail.value);
+            };
+        }
+
+        renderDashboard() {
+            let testsHtml = this.state.tests.map(test => `
+                <div class="test-card">
+                    <h3>${test.title}</h3>
+                    <p>Created by: ${test.createdBy}</p>
+                </div>
+            `).join('');
+            document.getElementById('app').innerHTML = `
+                <h2>Dashboard</h2>
+                <h3>Welcome, ${this.state.currentUser.email}</h3>
+                <h3>Your Tests:</h3>
+                <div class="dashboard">
+                    ${testsHtml}
+                </div>
+                <form id="createTestForm">
+                    <input type="text" id="testTitle" placeholder="Test Title" required>
+                    <button type="submit">Create Test</button>
+                </form>
+                <button id="logoutButton">Logout</button>
+            `;
+            document.getElementById('createTestForm').onsubmit = (e) => {
+                e.preventDefault();
+                this.createTest(e.target.testTitle.value);
+            };
+            document.getElementById('logoutButton').onclick = () => {
+                this.state.currentUser = null;
+                this.render();
+            };
+        }
+    }
+
+    new App();
+</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test App Unit Tests</title>
+</head>
+<body>
+    <script>
+        function testRegisterUser() {
+            const app = new App();
+            app.registerUser('test@example.com');
+            console.assert(app.state.users.length === 1, 'User should be registered');
+            app.registerUser('test@example.com');
+            console.assert(app.state.users.length === 1, 'User should not be registered again');
+        }
+
+        function testLoginUser() {
+            const app = new App();
+            app.registerUser('test@example.com');
+            app.loginUser('test@example.com');
+            console.assert(app.state.currentUser.email === 'test@example.com', 'User should be logged in');
+            app.loginUser('wrong@example.com');
+            console.assert(app.state.currentUser === null, 'Wrong user should not log in');
+        }
+
+        function testCreateTest() {
+            const app = new App();
+            app.registerUser('test@example.com');
+            app.loginUser('test@example.com');
+            app.createTest('Test Title 1');
+            console.assert(app.state.tests.length === 1, 'Test should be created');
+            console.assert(app.state.tests[0].title === 'Test Title 1', 'Test title should match');
+        }
+
+        testRegisterUser();
+        testLoginUser();
+        testCreateTest();
+        console.log('All tests passed!');
+    </script>
+</body>
+</html>
