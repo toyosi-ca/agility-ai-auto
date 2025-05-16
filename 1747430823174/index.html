@@ -3,248 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Store Inventory</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #f4f4f4;
-        }
-        header {
-            background: #007bff;
-            color: white;
-            padding: 1rem;
-            width: 100%;
-            text-align: center;
-        }
-        main {
-            padding: 20px;
-            width: 100%;
-            max-width: 800px;
-            background: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 20px;
-        }
-        input, select {
-            margin: 5px 0;
-            padding: 10px;
-        }
-        button {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #218838;
-        }
-        .book-item {
-            border: 1px solid #ddd;
-            margin: 10px 0;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .search-bar {
-            margin-bottom: 20px;
-        }
-        footer {
-            margin-top: auto;
-            padding: 10px;
-            text-align: center;
-            background: #007bff;
-            color: white;
-            width: 100%;
-        }
-    </style>
+    <meta name="description" content="Landing page for Musician Name, promoting brand and music.">
+    <title>Musician Name - Official Site</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <header>
+        <div class="logo"><a href="#home">Musician Name</a></div>
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#music">Music</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#merch">Merchandise</a></li>
+                <li><a href="#newsletter">Newsletter</a></li>
+            </ul>
+        </nav>
+    </header>
 
-<header>
-    <h1>Book Store Inventory</h1>
-</header>
+    <section id="hero">
+        <h1>Welcome to the Official Site of Musician Name</h1>
+        <button id="listenButton">Listen to Music</button>
+    </section>
 
-<main>
-    <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search by title, author or ISBN..." oninput="searchBooks()">
-    </div>
-    <form id="bookForm" onsubmit="addBook(event)">
-        <input type="hidden" id="bookId">
-        <input type="text" id="title" placeholder="Book Title" required>
-        <input type="text" id="author" placeholder="Author Name" required>
-        <select id="category" required>
-            <option value="">Select Category</option>
-            <option value="Fiction">Fiction</option>
-            <option value="Non-Fiction">Non-Fiction</option>
-            <option value="Science">Science</option>
-            <option value="Fantasy">Fantasy</option>
-        </select>
-        <input type="text" id="isbn" placeholder="ISBN Number" required>
-        <input type="number" id="quantity" placeholder="Available Quantity" required>
-        <button type="submit">Add Book</button>
-    </form>
-    <div id="bookList"></div>
-</main>
+    <section id="about">
+        <h2>About</h2>
+        <p>Musician Name is a talented artist known for... [bio content]</p>
+    </section>
 
-<footer>
-    <p>&copy; 2023 Book Store Inventory</p>
-</footer>
+    <section id="music">
+        <h2>Music</h2>
+        <audio id="musicPlayer" controls></audio>
+        <button onclick="playMusic()">Play Latest Track</button>
+    </section>
+
+    <section id="events">
+        <h2>Upcoming Events</h2>
+        <ul id="eventsList">
+            <li><a href="#event1">Concert in City A</a></li>
+            <li><a href="#event2">Concert in City B</a></li>
+        </ul>
+    </section>
+
+    <section id="merch">
+        <h2>Merchandise</h2>
+        <div class="merchandise-grid" id="merchList">
+            <div class="item"><img src="merch1.jpg" alt="Merch Item 1"><p>Merch Item 1</p></div>
+            <div class="item"><img src="merch2.jpg" alt="Merch Item 2"><p>Merch Item 2</p></div>
+        </div>
+    </section>
+
+    <section id="newsletter">
+        <h2>Sign Up for Our Newsletter</h2>
+        <form onsubmit="saveEmail(); return false;">
+            <input type="email" id="emailInput" placeholder="Enter your email" required>
+            <button type="submit">Subscribe</button>
+        </form>
+        <p id="confirmationMessage"></p>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 Musician Name. All rights reserved.</p>
+        <div class="socials">
+            <a href="https://facebook.com/musicianname" target="_blank">Facebook</a>
+            <a href="https://twitter.com/musicianname" target="_blank">Twitter</a>
+            <a href="https://instagram.com/musicianname" target="_blank">Instagram</a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        background: #333;
+        color: #fff;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+    nav ul {
+        list-style: none;
+        padding: 0;
+    }
+    nav ul li {
+        display: inline;
+        margin-left: 20px;
+    }
+    nav ul li a {
+        color: #fff;
+        text-decoration: none;
+    }
+    #hero {
+        background: url('hero.jpg') no-repeat center center/cover;
+        height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-align: center;
+    }
+    section {
+        padding: 20px;
+    }
+    .merchandise-grid {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .item {
+        flex: 1 1 300px;
+        margin: 10px;
+    }
+    footer {
+        background: #333;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+</style>
 
 <script>
-    const bookForm = document.getElementById('bookForm');
-    const bookListEl = document.getElementById('bookList');
-    const searchInput = document.getElementById('searchInput');
-
-    function loadBooks() {
-        const books = JSON.parse(localStorage.getItem('books')) || [];
-        displayBooks(books);
-    }
-
-    function displayBooks(books) {
-        bookListEl.innerHTML = '';
-        books.forEach(book => {
-            const bookDiv = document.createElement('div');
-            bookDiv.className = 'book-item';
-            bookDiv.innerHTML = `
-                <div>
-                    <strong>${book.title}</strong> by ${book.author} (ISBN: ${book.isbn}) - ${book.category} - Quantity: ${book.quantity}
-                </div>
-                <div>
-                    <button onclick="editBook('${book.id}')">Edit</button>
-                    <button onclick="deleteBook('${book.id}')">Delete</button>
-                </div>
-            `;
-            bookListEl.appendChild(bookDiv);
-        });
-    }
-
-    function searchBooks() {
-        const searchQuery = searchInput.value.toLowerCase();
-        const books = JSON.parse(localStorage.getItem('books')) || [];
-        const filteredBooks = books.filter(book =>
-            book.title.toLowerCase().includes(searchQuery) ||
-            book.author.toLowerCase().includes(searchQuery) ||
-            book.isbn.includes(searchQuery)
-        );
-        displayBooks(filteredBooks);
-    }
-
-    function addBook(event) {
-        event.preventDefault();
-        const id = document.getElementById('bookId').value || Date.now().toString();
-        const title = document.getElementById('title').value;
-        const author = document.getElementById('author').value;
-        const category = document.getElementById('category').value;
-        const isbn = document.getElementById('isbn').value;
-        const quantity = document.getElementById('quantity').value;
-
-        const books = JSON.parse(localStorage.getItem('books')) || [];
-        const bookIndex = books.findIndex(book => book.id === id);
-
-        if (bookIndex > -1) {
-            books[bookIndex] = { id, title, author, category, isbn, quantity };
+    function saveEmail() {
+        const email = document.getElementById('emailInput').value;
+        if (validateEmail(email)) {
+            let emailList = JSON.parse(localStorage.getItem('emails')) || [];
+            emailList.push(email);
+            localStorage.setItem('emails', JSON.stringify(emailList));
+            document.getElementById('confirmationMessage').innerText = 'Thank you for subscribing!';
         } else {
-            books.push({ id, title, author, category, isbn, quantity });
+            alert('Please enter a valid email address.');
         }
-
-        localStorage.setItem('books', JSON.stringify(books));
-        loadBooks();
-        bookForm.reset();
     }
 
-    function deleteBook(id) {
-        const books = JSON.parse(localStorage.getItem('books')) || [];
-        const updatedBooks = books.filter(book => book.id !== id);
-        localStorage.setItem('books', JSON.stringify(updatedBooks));
-        loadBooks();
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(String(email).toLowerCase());
     }
 
-    function editBook(id) {
-        const books = JSON.parse(localStorage.getItem('books')) || [];
-        const book = books.find(book => book.id === id);
-        document.getElementById('bookId').value = book.id;
-        document.getElementById('title').value = book.title;
-        document.getElementById('author').value = book.author;
-        document.getElementById('category').value = book.category;
-        document.getElementById('isbn').value = book.isbn;
-        document.getElementById('quantity').value = book.quantity;
+    function playMusic() {
+        displayMusic();
     }
 
-    window.onload = loadBooks;
+    function displayMusic() {
+        const musicList = JSON.parse(localStorage.getItem('musicTracks')) || [];
+        const musicPlayer = document.getElementById('musicPlayer');
+        if (musicList.length > 0) {
+            musicPlayer.src = musicList[0]; // Assuming first track is to be played
+            musicPlayer.play();
+        } else {
+            alert('No music tracks available.');
+        }
+    }
 </script>
-</body>
-</html> 
 
-// Unit Tests (not visible on the browser)
-describe('Book Store Inventory Tests', () => {
-    beforeEach(() => {
-        localStorage.clear();
-    });
-
-    test('Add a new book', () => {
-        document.getElementById('title').value = 'Test Book';
-        document.getElementById('author').value = 'Test Author';
-        document.getElementById('category').value = 'Fiction';
-        document.getElementById('isbn').value = '123456789';
-        document.getElementById('quantity').value = 10;
-        
-        addBook(new Event('submit'));
-
-        const books = JSON.parse(localStorage.getItem('books'));
-        expect(books.length).toBe(1);
-        expect(books[0].title).toBe('Test Book');
-    });
-
-    test('Delete a book', () => {
-        addTestBook();
-        const books = JSON.parse(localStorage.getItem('books'));
-        const bookId = books[0].id;
-        deleteBook(bookId);
-        
-        const updatedBooks = JSON.parse(localStorage.getItem('books'));
-        expect(updatedBooks.length).toBe(0);
-    });
-
-    function addTestBook() {
-        document.getElementById('title').value = 'Test Book';
-        document.getElementById('author').value = 'Test Author';
-        document.getElementById('category').value = 'Fiction';
-        document.getElementById('isbn').value = '123456789';
-        document.getElementById('quantity').value = 10;
-        addBook(new Event('submit'));
+<script>
+    // Unit Tests
+    function testEmailValidation() {
+        console.assert(validateEmail('test@example.com') === true, 'Test Case 1 Failed');
+        console.assert(validateEmail('invalid-email') === false, 'Test Case 2 Failed');
+        console.assert(validateEmail('another.test@domain.com') === true, 'Test Case 3 Failed');
+        console.assert(validateEmail('@domain.com') === false, 'Test Case 4 Failed');
+        console.log('All tests completed.');
     }
-
-    test('Edit a book', () => {
-        addTestBook();
-        const books = JSON.parse(localStorage.getItem('books'));
-        const bookId = books[0].id;
-
-        editBook(bookId);
-        
-        document.getElementById('title').value = 'Updated Book';
-        addBook(new Event('submit'));
-
-        const updatedBooks = JSON.parse(localStorage.getItem('books'));
-        expect(updatedBooks[0].title).toBe('Updated Book');
-    });
-
-    test('Search functionality', () => {
-        addTestBook();
-        const books = JSON.parse(localStorage.getItem('books'));
-        expect(books.length).toBe(1);
-        
-        document.getElementById('searchInput').value = 'Test Book';
-        searchBooks();
-
-        const displayedBooks = bookListEl.children.length;
-        expect(displayedBooks).toBe(1);
-    });
-});
+    
+    testEmailValidation();
+</script>

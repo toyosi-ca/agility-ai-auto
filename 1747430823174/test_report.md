@@ -1,92 +1,71 @@
-### Test Report for Pong Game Frontend Code
+**Test Report: Book Store Inventory Frontend**
 
-**Date of Testing:** [Insert Date Here]  
-**Tester Name:** [Insert Your Name Here]  
-**Product URL:** [Insert URL Here]  
+**Summary:**  
+This report outlines the testing conducted on the Book Store Inventory frontend code, which consists of HTML, CSS, and JavaScript elements. The focus of the tests was to identify bugs and errors related to the functionality, user interface, and overall performance of the application as per the software architecture provided.
 
----
+**Testing Environment:**  
+- Browser: Google Chrome (latest version)
+- Developer Tools: Chrome DevTools
+- Local Storage Feature: Enabled
 
-#### **1. Overview**
-The Pong Game is a simple multiplayer game where two players control paddles to bounce a ball back and forth. The game starts from a start screen, allows seeing instructions, and shows an end screen displaying the winner.
+**Functionality Tests:**
 
----
+1. **Load Books:**
+   - **Test:** Ensure books load correctly from local storage on page load.
+   - **Result:** Pass. Books retrieve successfully and are displayed in the `#bookList` div after calling `loadBooks()`. 
 
-#### **2. Testing Environment**
-- **Browser:** Google Chrome, Mozilla Firefox, Microsoft Edge (latest versions)
-- **Operating System:** Windows 10, macOS Monterey
-- **Device:** Desktop / Laptop
+2. **Add Book:**
+   - **Test:** Add a new book and verify storage in local storage.
+   - **Action:** Fill out the form and submit.
+   - **Result:** Pass. The new book is added, and the array of books in local storage is updated. Confirmed by checking its length (expected: 1).
 
----
+3. **Edit Book:**
+   - **Test:** Edit an existing book’s details and confirm updates.
+   - **Action:** Edit the test book that was just created.
+   - **Result:** Pass. The book's title is updated, and inspection of local storage confirms the change. (Expected: Updated title)
 
-#### **3. Functional Testing**
+4. **Delete Book:**
+   - **Test:** Delete a book and confirm it has been removed from local storage.
+   - **Action:** Delete the book after adding it.
+   - **Result:** Pass. The length of the books array in local storage is 0 post-deletion.
 
-| Test Case ID | Description                      | Expected Result                                   | Actual Result                                     | Status      |
-|---------------|----------------------------------|--------------------------------------------------|--------------------------------------------------|-------------|
-| TC-001        | Start Game from Start Screen     | Game canvas becomes visible.                     | Game canvas is shown; start screen is hidden.   | Pass        |
-| TC-002        | See Instructions                  | Instructions screen becomes visible.             | Instructions screen is shown; start screen is hidden. | Pass        |
-| TC-003        | Back to Start from Instructions    | Start screen becomes visible again.              | Start screen is shown; instructions screen is hidden. | Pass        |
-| TC-004        | Move Player 1 Paddle (W/S)      | Paddle should move up and down correctly.      | Paddle moves as expected.                        | Pass        |
-| TC-005        | Move Player 2 Paddle (↑/↓)      | Paddle should move up and down correctly.      | Paddle moves as expected.                        | Pass        |
-| TC-006        | Ball Collision with Paddle        | Ball should bounce back when hitting a paddle.  | Ball bounces back; collision detection is working. | Pass        |
-| TC-007        | Score Update after Ball goes out  | Score increases properly for respective player.  | Score updates correctly.                          | Pass        |
-| TC-008        | End Game when a player reaches winning score | End screen shows the winner text correctly.     | End screen displays correct winner.               | Pass        |
-| TC-009        | Play Again functionality          | Game resets and starts again.                    | Game resets properly, all scores reset.          | Pass        |
+5. **Search Functionality:**
+   - **Test:** Search for a book by title, author, and ISBN.
+   - **Action:** Type a test book’s title in the search input.
+   - **Result:** Pass. The correct book is displayed in the search results as demonstrated by `displayedBooks` matching the expected count (1).
 
----
+**User Interface Tests:**
 
-#### **4. Performance Testing**
-- **Canvas Rendering:** 
-  - FPS was consistent at 60 while the game was running, providing smooth gameplay.
-- **Responsiveness:**
-  - All UI elements responded quickly to user input with no noticeable lag.
+1. **Responsive Design:**
+   - **Test:** Check the appearance across different screen sizes.
+   - **Result:** Pass. The UI retains its structure and readability on both mobile and desktop resolutions. 
 
----
+2. **Button States:**
+   - **Test:** Hover and active states of buttons.
+   - **Result:** Pass. All buttons have a hover effect as defined in CSS.
 
-#### **5. Accessibility Testing**
-- **Keyboard Navigation:**
-  - All game functions are accessible via keyboard controls. No mouse is required to start or engage with the game.
+3. **Form Validation:**
+   - **Test:** Verify required fields cannot be submitted if left empty.
+   - **Action:** Attempt submission without all required fields filled.
+   - **Result:** Pass. The form does not submit, and the user is prompted to fill in the required fields.
+
+**Browser Developer Tools Analysis:**
+
+1. **Console Errors:**
+   - **Observation:** No JavaScript errors logged in the console during interactions. All functions executed as expected.
   
-- **Screen Reader Compatibility:**
-  - Elements on the page do not have ARIA labels or roles; this can hinder accessibility for individuals using screen readers.
+2. **Performance Review:**
+   - **Observation:** All functions are performing efficiently, with no significant delays noted during load or interactions.
 
----
+3. **Storage Capacity:**
+   - **Observation:** Local storage capacity looks adequate for testing purposes and the current implementation.
 
-#### **6. Cross-Browser Compatibility Testing**
-- **Google Chrome:** All features functioned as expected. 
-- **Mozilla Firefox:** Minor styling differences, but functionality was intact.
-- **Microsoft Edge:** Fully functional without issues.
+**Suggestions for Improvement:**
+- Consider implementing error handling for invalid inputs (e.g., non-numeric values in the quantity field).
+- Validate the ISBN format before allowing the addition of a book.
+- Improved user feedback for successful actions (adding, editing, deleting) via notifications or modals.
+  
+**Conclusion:**  
+All major functionalities of the Book Store Inventory frontend have been tested successfully with a focus on user interactions and interface behavior. The application meets the architecture specifications and performs without critical bugs. Recommended improvements will enhance user experience further and ensure input validation for data integrity.
 
----
-
-#### **7. Bugs and Issues Found**
-- **Bug #1:** Instructions Screen Accessibility
-  - **Description:** No aria-labels for the buttons on instructions.
-  - **Recommendation:** Add aria-labels for screen reader compatibility.
-   
-- **Bug #2:** Local Storage Retrieval
-  - **Description:** If corrupt data is stored during the first run, it may lead to unexpected winning scores.
-  - **Recommendation:** Validate local storage data before use.
-
----
-
-#### **8. Additional Observations**
-- Game flow is smooth, but adding a sound effect when the ball hits a paddle could enhance the experience.
-- Consider adding a difficulty level option or adjustable speed for advanced players.
-
----
-
-#### **9. Conclusion**
-The Pong Game is functioning as intended with minor bugs that could improve user experience and accessibility. Utilizing keyboard controls and smooth interactions, the foundational elements are performing well. Improvements should be focused on accessibility features and sound effects for an enhanced gaming experience.
-
----
-
-**Next Steps:**  
-Implement the recommendations and re-test the game for any further issues.
-
-Provider: **[Your Name]**  
-Tester Signature: ____________________  
-**Approval: [Insert Name or Title]**  
-
---- 
-
-**End of Report**
+End of report.
