@@ -1,56 +1,46 @@
-# Deployment Documentation for Gideon Peters - Landing Page
+# Deployment Documentation for Full-Screen Tetris Game
 
 ## Overview
-This document provides comprehensive steps to deploy the Gideon Peters landing page to GitHub Pages using the output/build directory.
+This document outlines the steps necessary to deploy the Full-Screen Tetris Game to GitHub Pages.
 
 ## Prerequisites
-- A GitHub account.
-- Git installed on your local machine.
-- Node.js and npm (if using a build tool).
+- A GitHub account
+- Git installed on your local machine
+- A local copy of the Tetris game project
 
-## Steps to Deploy
+## Steps for Deployment
 
-### 1. Prepare Your Project
-Ensure that your landing page is ready and all necessary files are generated in the output/build directory. The landing page should comply with HTML, CSS, and JavaScript standards.
+### 1. Build Your Project
+Ensure that your project is ready for deployment. That means all necessary files should be in the `output/build` directory. This directory should contain an `index.html` file and any other assets the game requires.
 
-### 2. Initialize Git Repository
-If you haven't already, navigate to your project directory in the terminal and initialize a new git repository:
+### 2. Push the Code to GitHub
+If you haven't already, initialize a Git repository, commit your files, and push them to your GitHub repository. Use the following commands in your terminal:
+
 ```bash
 git init
-```
-
-### 3. Commit Your Code
-Add all your files to the repository and commit the changes:
-```bash
 git add .
-git commit -m "Initial commit of Gideon Peters Landing Page"
-```
-
-### 4. Push to GitHub
-Create a new repository on GitHub, then link your local repository to the remote repository:
-```bash
-git remote add origin https://github.com/username/repository-name.git
-git branch -M main
+git commit -m "Initial commit"
+git remote add origin https://github.com/USERNAME/REPO_NAME.git
 git push -u origin main
 ```
+Replace `USERNAME` and `REPO_NAME` with your GitHub username and the name of your repository.
 
-### 5. Deploy to GitHub Pages
-Now that your code is pushed to GitHub, you can deploy it to GitHub Pages. Use the following tool to deploy:
+### 3. Deploy to GitHub Pages
+Deploy the content from the `output/build` directory to GitHub Pages using the deployment tool.
+
+```python
+# Example of tool usage in a hypothetical script
+Deploy to Github Pages
+{
+    "build_path": "output/build"
+}
 ```
-Action: Deploy to Github Pages
-Action Input: {"build_path":"output/build"}
+
+### 4. Verify Deployment
+After deployment is complete, you can access your Tetris game via the following URL:
 ```
-
-### 6. Verify Deployment
-After deployment, go to `https://username.github.io/repository-name/` to see your landing page live. Make sure to replace `username` and `repository-name` with your actual GitHub username and the name of the repository.
-
-## Testing the Features
-Ensure that all features work correctly:
-- Verify that the contact form correctly stores data in local storage.
-- Check that the biography section expands and collapses as expected.
-
-### Unit Tests
-You can incorporate simple unit tests to verify the functionality of the contact form and the biography expand/collapse feature as provided in the initial code.
+https://USERNAME.github.io/REPO_NAME/
+```
 
 ## Conclusion
-Following these steps will successfully deploy the Gideon Peters landing page to GitHub Pages, making it accessible to the public. Adjust links and content as necessary to fit your actual deployment scenario.
+Following these steps will allow you to successfully push and deploy your Full-Screen Tetris Game to GitHub Pages.

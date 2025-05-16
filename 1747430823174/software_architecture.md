@@ -1,79 +1,120 @@
-# Software Architecture Document for Full-Screen Tetris Game
+# Software Architecture Document for Peer-to-Peer Ethereum App
 
-## 1. Introduction
-This document outlines the software architecture for the full-screen Tetris game as per the product requirements document. The focus is on a simple, single-page frontend application that utilizes the Local Storage API for data persistence.
+## 1. Overview
+This document outlines the frontend architecture for the Peer-to-Peer (P2P) Ethereum App based on the Product Requirements Document (PRD) provided. The solution is designed to be simple, user-friendly, and capable of using the local storage API for data persistence.
 
-## 2. Architecture Overview
-The architecture consists of a single-page web application built with HTML5, CSS3, and JavaScript. The game will utilize the Phaser.js framework for canvas rendering and game management. Local Storage is used to store player scores and settings.
+## 2. System Design Components
 
-### Technology Stack:
-- **Frontend**: HTML5, CSS3, JavaScript
-- **Game Framework**: Phaser.js
-- **Data Storage**: Local Storage API in the browser
+### 2.1 Frontend Framework
+- **React.js** for web interface
+- **React Native** for mobile compatibility
 
-## 3. Components
+### 2.2 Local Storage Utilization
+Use the browser’s local storage to store user-related data and transaction history. This ensures data persistence without requiring server-side support.
 
-### 3.1 Game Engine (Phaser.js)
-- **Rendering**: Handle the rendering of game graphics, including Tetris pieces and backgrounds.
-- **Game Mechanics**: Manage gameplay, including piece movement, rotation, collision detection, and line-clearing logic.
+### 2.3 Application Structure
+```
+/src
+|-- /components
+|   |-- UserRegistration.js
+|   |-- WalletIntegration.js
+|   |-- P2PTransaction.js
+|   |-- EscrowService.js
+|   |-- UserProfile.js
+|   |-- RatingFeedback.js
+|   |-- Notifications.js
+|   |-- UserSupport.js
+|-- /hooks
+|   |-- useLocalStorage.js
+|-- /utils
+|   |-- ethAPI.js
+|-- App.js
+|-- index.js
+```
 
-### 3.2 User Interface
-- **HTML/CSS Layout**: Structures the layout for the game, including HUD elements such as score, level display, and next piece preview.
-- **Responsive Design**: Use media queries to adapt to various screen sizes ensuring full-screen capability.
+## 3. Feature Breakdown
 
-### 3.3 Game Modes
-- Implement three modes: Classic, Timed, and Endless.
-- Each mode will have customized gameplay logic, utilizing the core mechanics of Tetris.
+### 3.1 User Registration
+- **Components**: `UserRegistration.js`
+- **Functionality**:
+  - Use local storage to save user information.
+  - Handle email verification via a simple verification link sent to the user’s email and store verification status in local storage.
+  
+```javascript
+const registerUser = (userData) => {
+  localStorage.setItem('user', JSON.stringify(userData));
+  // Trigger email verification process
+};
+```
 
-### 3.4 Scoring System
-- Create a function to calculate scores based on lines cleared and maintain the current game score.
-- Use Local Storage to persist high scores and retrieve them when the game loads.
+### 3.2 Wallet Integration
+- **Components**: `WalletIntegration.js`
+- **Functionality**:
+  - Allow users to connect existing wallets like MetaMask.
+  - Store wallet connection status and address in local storage.
+  - Provide an option for creating a new wallet (dummy implementation for the demo).
 
-### 3.5 Audio Management
-- Manage background music and sound effects through HTML5 Audio API.
-- Include options in the settings menu to mute or adjust audio levels.
+### 3.3 P2P Transaction
+- **Components**: `P2PTransaction.js`
+- **Functionality**:
+  - Transaction creation wizard where users can select asset and amount.
+  - Store transaction details in local storage after user verification.
 
-### 3.6 Local Storage Management
-- **High Score Management**: Store and retrieve high scores within the Local Storage.
-- Implement functions to save player scores when a game ends, and retrieve them for display on the high score leaderboard.
+```javascript
+const createTransaction = (transactionData) => {
+  const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+  transactions.push(transactionData);
+  localStorage.setItem('transactions', JSON.stringify(transactions));
+};
+```
 
-## 4. Game Flow
-1. **Start Screen**: 
-   - Display “Play”, “Instructions”, and “High Scores”.
-   - Button handlers trigger the game initialization or show game instructions.
-   
-2. **Game Initialization**: 
-   - Start the game loop using Phaser.js.
-   - Load and prepare assets including Tetris pieces and audio files.
+### 3.4 Escrow Service
+- **Components**: `EscrowService.js`
+- **Functionality**:
+  - Define and store conditions for releasing funds in local storage.
+  - Facilitate basic conditions checking (boolean flags or timestamps).
 
-3. **Gameplay Loop**: 
-   - Handle user inputs for controls (arrow keys / swipe gestures).
-   - Update game state through the game engine (piece falling, line-clearing).
-   - Incorporate scoring calculations and high score storage.
+### 3.5 User Profile Management
+- **Components**: `UserProfile.js`
+- **Functionality**:
+  - Allow users to edit their information stored in local storage.
+  - Display past transactions by reading from local storage.
 
-4. **Game Over Screen**: 
-   - Display final score, options to “Restart” or “Exit”.
-   - Trigger necessary functions to save the score in Local Storage.
+### 3.6 Rating and Feedback System
+- **Components**: `RatingFeedback.js`
+- **Functionality**: 
+  - Users submit ratings and comments stored in local storage.
+  
+```javascript
+const submitFeedback = (feedback) => {
+  const feedbackList = JSON.parse(localStorage.getItem('feedbackList')) || [];
+  feedbackList.push(feedback);
+  localStorage.setItem('feedbackList', JSON.stringify(feedbackList));
+};
+```
 
-## 5. User Interface Organization
-- **Score Display**: Located at the top with dynamic updates during play.
-- **Next Piece Preview**: Positioned to provide visual feedback on upcoming pieces.
-- **Level Indicator**: Updates as players reach higher levels within the game.
+### 3.7 Notifications
+- **Components**: `Notifications.js`
+- **Functionality**:
+  - Provide push notifications using the browser’s Notification API.
+  - Store notification settings in local storage.
 
-## 6. Responsiveness and Accessibility
-- Use flexible layouts and adaptable canvas sizes.
-- Include options for color blindness (different shapes or patterns on pieces) to enhance accessibility.
+### 3.8 Security Features
+- **Functionality**:
+  - Implement basic 2FA using local storage for tokens.
+  - Show alerts based on security audits (in-development feature).
 
-## 7. Performance Optimization
-- Ensure smooth rendering by limiting the complexity of graphics.
-- Use sprite sheets for Tetris pieces to improve loading times and performance.
+### 3.9 User Support
+- **Components**: `UserSupport.js`
+- **Functionality**:
+  - Serve an FAQ section through static content.
+  - Utilize local storage to track user support tickets (if implemented).
 
-## 8. Milestones
-- Week 1-2: UI Design and Initial Game Functionality Development
-- Week 3-5: Core Game Mechanics and Gameplay Testing
-- Week 6: Integration of Audio Elements and Performance Tuning
-- Week 7: Deployment of High Score Functionality
-- Week 8: Final Testing and Bug Fixing
+## 4. User Experience (UX) Implementation
+Ensure a simple onboarding process, consistent branding across components, and responsive designs using CSS Flexbox/Grid.
 
-## 9. Conclusion
-This architecture document provides a clear, structured approach to developing a full-screen Tetris game using frontend technologies. By adhering to the outlined components and ensuring data persistence using Local Storage, the development team can create an engaging, well-performing game for a wide audience, fulfilling all product requirements outlined in the PRD.
+## 5. Success Metrics Tracking
+Utilize local storage to keep track of user metrics for analysis, which allows the ability to gauge user adoption over time.
+
+## 6. Conclusion
+This frontend architecture design focuses on simplicity and ease of implementation. All critical features have been broken down into manageable components, utilizing local storage for data persistence. As the project grows, this architecture allows for scaling while maintaining a focus on user experience and satisfaction. By adhering to these designs, we can efficiently create a secure and user-friendly P2P Ethereum application that meets outlined objectives.
