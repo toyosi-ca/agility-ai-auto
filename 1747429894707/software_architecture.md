@@ -1,32 +1,18 @@
-# Software Architecture Document for Temperature Converter
-
-**Prepared By:** [Your Name]  
-**Date:** [Current Date]
+# Software Architecture Document for Temperature Converter Application
 
 ## 1. Overview
-This document outlines the proposed software architecture for the Temperature Converter application, derived from the product requirements document. The solution will focus exclusively on front-end implementation using HTML, CSS, and JavaScript, and it will leverage the browser's Local Storage API for data persistence where necessary.
+This architecture document outlines the design and implementation strategy for the Temperature Converter application based on the provided Product Requirements Document (PRD). The application is strictly a frontend solution utilizing the browser's local storage API for data persistence, ensuring simplicity and ease of use.
 
 ## 2. System Components
+The Temperature Converter application consists of the following key components:
 
-### 2.1 Frontend Technologies
-- **HTML**: For creating the structure of the web application.
-- **CSS**: For styling the application and ensuring responsive design.
-- **JavaScript**: For implementing the conversion logic and managing user interactions.
+1. **HTML Structure**
+2. **CSS Styles**
+3. **JavaScript Logic**
+4. **Local Storage for History**
 
-### 2.2 User Interface Components
-- **Input Fields**: 
-  - Three input fields for Celsius, Fahrenheit, and Kelvin.
-- **Convert Button**: 
-  - Button to initiate the conversion process.
-- **Clear Button**: 
-  - Button to clear all input and output fields.
-- **Output Display**: 
-  - Display area for showing conversion results with respective unit labels.
-
-### 2.3 Local Storage
-- Use the Local Storage API to store the last used temperature values for a quicker user experience on subsequent uses.
-
-## 3. User Interface Structure
+### 2.1 HTML Structure
+The HTML file serves as the backbone of the application, containing essential input elements, dropdowns for unit selection, a button for conversion, an output area for displaying results, and areas for error messages and conversion history. The markup is as follows:
 
 ```html
 <!DOCTYPE html>
@@ -38,139 +24,151 @@ This document outlines the proposed software architecture for the Temperature Co
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="container">
-        <h1>Temperature Converter</h1>
-        <input type="number" id="celsius" placeholder="Celsius (°C)">
-        <input type="number" id="fahrenheit" placeholder="Fahrenheit (°F)">
-        <input type="number" id="kelvin" placeholder="Kelvin (K)">
-        <button id="convert">Convert</button>
-        <button id="clear">Clear</button>
-        <div id="results"></div>
+    <h1>Temperature Converter</h1>
+    <div class="converter">
+        <input type="number" id="temperatureInput" placeholder="Enter temperature">
+        
+        <select id="fromUnit">
+            <option value="Celsius">Celsius (°C)</option>
+            <option value="Fahrenheit">Fahrenheit (°F)</option>
+            <option value="Kelvin">Kelvin (K)</option>
+        </select>
+        
+        <select id="toUnit">
+            <option value="Celsius">Celsius (°C)</option>
+            <option value="Fahrenheit">Fahrenheit (°F)</option>
+            <option value="Kelvin">Kelvin (K)</option>
+        </select>
+        
+        <button id="convertButton">Convert</button>
+        <div id="outputArea"></div>
+        <div id="errorArea"></div>
+        <div id="historyArea"></div>
     </div>
     <script src="script.js"></script>
 </body>
 </html>
 ```
 
-## 4. Conversion Logic
-
-```javascript
-// script.js
-document.getElementById('convert').onclick = function() {
-    const celsius = parseFloat(document.getElementById('celsius').value);
-    const fahrenheit = parseFloat(document.getElementById('fahrenheit').value);
-    const kelvin = parseFloat(document.getElementById('kelvin').value);
-
-    if (!isNaN(celsius)) {
-        document.getElementById('fahrenheit').value = (celsius * (9/5) + 32).toFixed(2);
-        document.getElementById('kelvin').value = (celsius + 273.15).toFixed(2);
-        localStorage.setItem('lastCelsius', celsius);
-    } else if (!isNaN(fahrenheit)) {
-        document.getElementById('celsius').value = ((fahrenheit - 32) * (5/9)).toFixed(2);
-        document.getElementById('kelvin').value = ((fahrenheit - 32) * (5/9) + 273.15).toFixed(2);
-        localStorage.setItem('lastFahrenheit', fahrenheit);
-    } else if (!isNaN(kelvin)) {
-        document.getElementById('celsius').value = (kelvin - 273.15).toFixed(2);
-        document.getElementById('fahrenheit').value = ((kelvin - 273.15) * (9/5) + 32).toFixed(2);
-        localStorage.setItem('lastKelvin', kelvin);
-    }
-};
-
-// Clear button functionality
-document.getElementById('clear').onclick = function() {
-    document.getElementById('celsius').value = '';
-    document.getElementById('fahrenheit').value = '';
-    document.getElementById('kelvin').value = '';
-    document.getElementById('results').innerText = '';
-    localStorage.clear();
-};
-
-// Load last used values from local storage
-window.onload = function() {
-    document.getElementById('celsius').value = localStorage.getItem('lastCelsius') || '';
-    document.getElementById('fahrenheit').value = localStorage.getItem('lastFahrenheit') || '';
-    document.getElementById('kelvin').value = localStorage.getItem('lastKelvin') || '';
-};
-```
-
-## 5. Styling
+### 2.2 CSS Styles
+The CSS file provides basic styling to ensure the application is visually appealing and user-friendly. This involves establishing styles for the input fields, buttons, output displays, and layout responsiveness.
 
 ```css
-/* styles.css */
 body {
     font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-#container {
-    width: 300px;
-    margin: auto;
+.converter {
+    background: #fff;
     padding: 20px;
-    border: 2px solid #ccc;
-    border-radius: 8px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
     text-align: center;
 }
 
-input {
-    width: 80%;
-    margin: 10px 0;
-    padding: 8px;
-}
-
-button {
-    margin: 5px;
-    padding: 10px 15px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
+input, select, button {
+    margin: 10px;
+    padding: 10px;
+    width: 200px;
 }
 ```
 
-## 6. Accessibility
-Ensure the application complies with WCAG 2.1 guidelines by providing:
-- Descriptive labels and placeholders for input fields.
-- High contrast colors for text and buttons.
-- Keyboard navigability for all UI components.
-
-## 7. Multilingual Support
-To incorporate multilingual support for English and Spanish, we can define text labels and messages in an object and dynamically render them based on user selection.
+### 2.3 JavaScript Logic
+The JavaScript file handles user interaction and conversion logic. It also manages error handling, updating the output area, and storing conversion history in local storage. Below is the primary conversion logic:
 
 ```javascript
-const translations = {
-  en: {
-    title: "Temperature Converter",
-    celsius: "Celsius (°C)",
-    fahrenheit: "Fahrenheit (°F)",
-    kelvin: "Kelvin (K)",
-    convert: "Convert",
-    clear: "Clear"
-  },
-  es: {
-    title: "Convertidor de Temperatura",
-    celsius: "Celsius (°C)",
-    fahrenheit: "Fahrenheit (°F)",
-    kelvin: "Kelvin (K)",
-    convert: "Convertir",
-    clear: "Borrar"
-  }
-};
+document.getElementById('convertButton').addEventListener('click', function() {
+    const input = document.getElementById('temperatureInput').value;
+    const fromUnit = document.getElementById('fromUnit').value;
+    const toUnit = document.getElementById('toUnit').value;
+    const outputArea = document.getElementById('outputArea');
+    const errorArea = document.getElementById('errorArea');
+    
+    errorArea.textContent = '';
+    outputArea.textContent = '';
+    
+    if (isNaN(input) || input.trim() === '') {
+        errorArea.textContent = 'Please enter a valid number.';
+        return;
+    }
+    
+    const temperature = parseFloat(input);
+    let convertedValue;
 
-function translate(language) {
-    document.querySelector('h1').innerText = translations[language].title;
-    document.getElementById('celsius').placeholder = translations[language].celsius;
-    document.getElementById('fahrenheit').placeholder = translations[language].fahrenheit;
-    document.getElementById('kelvin').placeholder = translations[language].kelvin;
-    document.getElementById('convert').innerText = translations[language].convert;
-    document.getElementById('clear').innerText = translations[language].clear;
+    // Perform conversion based on selected units
+    if (fromUnit === 'Celsius') {
+        convertedValue = toUnit === 'Fahrenheit' ? (temperature * 9/5) + 32 : temperature + 273.15;
+    } else if (fromUnit === 'Fahrenheit') {
+        convertedValue = toUnit === 'Celsius' ? (temperature - 32) * 5/9 : (temperature - 32) * 5/9 + 273.15;
+    } else { // fromUnit === 'Kelvin'
+        convertedValue = toUnit === 'Celsius' ? temperature - 273.15 : (temperature - 273.15) * 9/5 + 32;
+    }
+
+    outputArea.textContent = `${temperature} ${fromUnit} is ${convertedValue.toFixed(2)} ${toUnit}`;
+    
+    // Store history in local storage
+    storeHistory(input, fromUnit, convertedValue, toUnit);
+    displayHistory();
+});
+
+function storeHistory(input, fromUnit, convertedValue, toUnit) {
+    let history = JSON.parse(localStorage.getItem('conversionHistory')) || [];
+    const conversion = { input, fromUnit, convertedValue, toUnit };
+    history.unshift(conversion);
+    if (history.length > 5) history.pop(); // Keep only last 5 conversions
+    localStorage.setItem('conversionHistory', JSON.stringify(history));
 }
+
+function displayHistory() {
+    const historyArea = document.getElementById('historyArea');
+    historyArea.innerHTML = '<h2>Conversion History:</h2>';
+    const history = JSON.parse(localStorage.getItem('conversionHistory')) || [];
+    history.forEach(item => {
+        historyArea.innerHTML += `<p>${item.input} ${item.fromUnit} → ${item.convertedValue} ${item.toUnit}</p>`;
+    });
+}
+
+// Display history on load
+document.addEventListener('DOMContentLoaded', displayHistory);
 ```
 
-## 8. Conclusion
-This architecture outlines a straightforward yet powerful solution for building a Temperature Converter application on the frontend. It utilizes existing web standards and provides a delightful user experience while ensuring accessibility and internationalization. With this design, we aim to deliver a reliable, user-friendly product that meets the outlined requirements effectively. 
+### 2.4 Local Storage for History
+The application utilizes the browser's local storage to save the last five conversion operations. When the user performs a conversion, the details are stored in an array, which is then saved into local storage. On loading the application, it retrieves and displays the conversion history to the user.
 
-By developing the application with modular components, we ensure simplicity and ease of maintenance, paving the way for future upgrades and enhancements as user needs evolve.
+## 3. User Interaction
+1. Users enter a temperature value in the numeric input field.
+2. Users select the original temperature unit from the first dropdown.
+3. Users select the target temperature unit from the second dropdown.
+4. Users click the "Convert" button to trigger the conversion.
+5. The converted temperature is displayed, while relevant errors for invalid inputs are also provided.
+6. Conversion history is maintained and displayed below the result section.
+
+## 4. Error Handling
+Error messages are provided for:
+- Non-numeric inputs.
+- Empty input fields.
+
+These error messages are displayed in a dedicated error message area, enhancing user experience by providing immediate feedback.
+
+## 5. Compliance and Accessibility
+The application will adhere to the WCAG 2.1 standards ensuring:
+- Text contrast is sufficient for readability.
+- All interactive elements are keyboard navigable.
+- Input fields have associated labels.
+
+## 6. Testing and Validation
+The application will undergo the following testing phases:
+- **Unit Testing:** testing individual components for respective functionalities.
+- **Integration Testing:** ensuring components work together.
+- **User Acceptance Testing:** collecting feedback from end-users to validate the application's usability and effectiveness.
+
+## 7. Conclusion
+The Temperature Converter application will provide users with an efficient, intuitive way to convert temperatures among Celsius, Fahrenheit, and Kelvin. The outlined architecture ensures simplicity, usability, and smooth interactions, making it accessible to a broad audience. Implementing local storage for history supports the non-intrusive persistence of user data, enhancing the overall experience. The project is set to be developed over a carefully planned timeline to meet the deployment goal effectively.

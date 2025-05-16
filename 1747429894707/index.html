@@ -7,90 +7,117 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
-        #container {
-            width: 300px;
-            margin: auto;
+        .converter {
+            background: #fff;
             padding: 20px;
-            border: 2px solid #ccc;
-            border-radius: 8px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
             text-align: center;
         }
 
-        input {
-            width: 80%;
-            margin: 10px 0;
-            padding: 8px;
+        input, select, button {
+            margin: 10px;
+            padding: 10px;
+            width: 200px;
         }
 
-        button {
-            margin: 5px;
-            padding: 10px 15px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+        #errorArea {
+            color: red;
+            text-align: center;
         }
 
-        button:hover {
-            background-color: #0056b3;
+        #outputArea {
+            color: green;
+            text-align: center;
         }
 
-        .hidden {
-            display: none;
+        #historyArea {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div id="container">
-        <h1>Temperature Converter</h1>
-        <input type="number" id="celsius" placeholder="Celsius (°C)">
-        <input type="number" id="fahrenheit" placeholder="Fahrenheit (°F)">
-        <input type="number" id="kelvin" placeholder="Kelvin (K)">
-        <button id="convert">Convert</button>
-        <button id="clear">Clear</button>
-        <div id="results" class="hidden"></div>
+    <h1>Temperature Converter</h1>
+    <div class="converter">
+        <input type="number" id="temperatureInput" placeholder="Enter temperature">
+        
+        <select id="fromUnit">
+            <option value="Celsius">Celsius (°C)</option>
+            <option value="Fahrenheit">Fahrenheit (°F)</option>
+            <option value="Kelvin">Kelvin (K)</option>
+        </select>
+        
+        <select id="toUnit">
+            <option value="Celsius">Celsius (°C)</option>
+            <option value="Fahrenheit">Fahrenheit (°F)</option>
+            <option value="Kelvin">Kelvin (K)</option>
+        </select>
+        
+        <button id="convertButton">Convert</button>
+        <div id="outputArea"></div>
+        <div id="errorArea"></div>
+        <div id="historyArea"></div>
     </div>
     <script>
-        document.getElementById('convert').onclick = function() {
-            const celsius = parseFloat(document.getElementById('celsius').value);
-            const fahrenheit = parseFloat(document.getElementById('fahrenheit').value);
-            const kelvin = parseFloat(document.getElementById('kelvin').value);
-            let results = '';
-
-            if (!isNaN(celsius)) {
-                results += `Fahrenheit: ${(celsius * (9/5) + 32).toFixed(2)} °F<br>`;
-                results += `Kelvin: ${(celsius + 273.15).toFixed(2)} K<br>`;
-                localStorage.setItem('lastCelsius', celsius);
-            } else if (!isNaN(fahrenheit)) {
-                results += `Celsius: ${((fahrenheit - 32) * (5/9)).toFixed(2)} °C<br>`;
-                results += `Kelvin: ${(fahrenheit - 32) * (5/9) + 273.15.toFixed(2)} K<br>`;
-                localStorage.setItem('lastFahrenheit', fahrenheit);
-            } else if (!isNaN(kelvin)) {
-                results += `Celsius: ${(kelvin - 273.15).toFixed(2)} °C<br>`;
-                results += `Fahrenheit: ${((kelvin - 273.15) * (9/5) + 32).toFixed(2)} °F<br>`;
-                localStorage.setItem('lastKelvin', kelvin);
+        document.getElementById('convertButton').addEventListener('click', function() {
+            const input = document.getElementById('temperatureInput').value;
+            const fromUnit = document.getElementById('fromUnit').value;
+            const toUnit = document.getElementById('toUnit').value;
+            const outputArea = document.getElementById('outputArea');
+            const errorArea = document.getElementById('errorArea');
+            
+            errorArea.textContent = '';
+            outputArea.textContent = '';
+            
+            if (isNaN(input) || input.trim() === '') {
+                errorArea.textContent = 'Please enter a valid number.';
+                return;
             }
-            document.getElementById('results').innerHTML = results;
-            document.getElementById('results').classList.remove('hidden');
-        };
+            
+            const temperature = parseFloat(input);
+            let convertedValue;
 
-        document.getElementById('clear').onclick = function() {
-            document.getElementById('celsius').value = '';
-            document.getElementById('fahrenheit').value = '';
-            document.getElementById('kelvin').value = '';
-            document.getElementById('results').innerText = '';
-            document.getElementById('results').classList.add('hidden');
-            localStorage.clear();
-        };
+            if (fromUnit === 'Celsius') {
+                convertedValue = toUnit === 'Fahrenheit' ? (temperature * 9/5) + 32 : temperature + 273.15;
+            } else if (fromUnit === 'Fahrenheit') {
+                convertedValue = toUnit === 'Celsius' ? (temperature - 32) * 5/9 : (temperature - 32) * 5/9 + 273.15;
+            } else {
+                convertedValue = toUnit === 'Celsius' ? temperature - 273.15 : (temperature - 273.15) * 9/5 + 32;
+            }
 
-        window.onload = function() {
-            document.getElementById('celsius').value = localStorage.getItem('lastCelsius') || '';
-            document.getElementById('fahrenheit').value = localStorage.getItem('lastFahrenheit') || '';
-            document.getElementById('kelvin').value = localStorage.getItem('lastKelvin') || '';
-        };
+            outputArea.textContent = `${temperature} ${fromUnit} is ${convertedValue.toFixed(2)} ${toUnit}`;
+            storeHistory(input, fromUnit, convertedValue, toUnit);
+            displayHistory();
+        });
+
+        function storeHistory(input, fromUnit, convertedValue, toUnit) {
+            let history = JSON.parse(localStorage.getItem('conversionHistory')) || [];
+            const conversion = { input, fromUnit, convertedValue, toUnit };
+            history.unshift(conversion);
+            if (history.length > 5) history.pop();
+            localStorage.setItem('conversionHistory', JSON.stringify(history));
+        }
+
+        function displayHistory() {
+            const historyArea = document.getElementById('historyArea');
+            historyArea.innerHTML = '<h2>Conversion History:</h2>';
+            const history = JSON.parse(localStorage.getItem('conversionHistory')) || [];
+            history.forEach(item => {
+                historyArea.innerHTML += `<p>${item.input} ${item.fromUnit} → ${item.convertedValue} ${item.toUnit}</p>`;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', displayHistory);
     </script>
 </body>
 </html>
