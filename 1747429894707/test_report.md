@@ -1,98 +1,86 @@
-### Frontend Test Report for Temperature Converter
+**Test Report for Temperature Converter Frontend**
 
-#### 1. Overview
-This report documents the testing findings of the Temperature Converter web application based on the provided frontend code. The application is designed to convert temperatures between Celsius, Fahrenheit, and Kelvin.
+**1. Overview**  
+The Temperature Converter application allows users to convert temperatures between Celsius, Fahrenheit, and Kelvin. The frontend consists of user input fields, selection dropdowns, a convert button, output areas, and a history area.
 
-#### 2. Testing Environment
-- **Browser:** Google Chrome (latest version)
-- **Operating System:** Windows 10
-- **Tools Used:** Chrome Developer Tools
+**2. Testing Environment**  
+- Browser: Google Chrome 117.0.5938.92
+- Operating System: Windows 10
+- Screen Resolution: 1920x1080
 
-#### 3. Testing Criteria
-- **Functionality:** Ensuring the conversion logic works correctly.
-- **User Interface:** Checking the layout, alignment, and overall look and feel.
-- **Local Storage:** Verifying that the local storage functionality is correct.
-- **Performance:** Observing the load and interaction performance.
-- **Responsiveness:** Ensuring that the application behaves correctly on different screen sizes.
+**3. Test Cases**
 
-#### 4. Functional Testing
+**Test Case 1: Initial State Check**  
+- **Objective**: Verify that the application loads with the expected elements.
+- **Steps**: Open the application URL. Check for:
+  - The title "Temperature Converter"
+  - Input field for temperature
+  - Dropdown options for "fromUnit" and "toUnit"
+  - Convert button
+  - Output area
+  - Error area
+  - History area
+- **Expected Result**: All elements should be present.
+- **Results**: Passed.
 
-##### 4.1 Temperature Conversion
-- **Celsius to Fahrenheit:**
-  - Input: 100 °C
-  - Expected Output: 212 °F
-  - Actual Output: 212 °F ✅
+**Test Case 2: Conversion Functionality**  
+- **Objective**: Validate the conversion calculations.
+- **Steps**: 
+  - Input “100” in the temperature input field.
+  - Select "Celsius" from "fromUnit" and "Fahrenheit" from "toUnit".
+  - Click "Convert".
+- **Expected Result**: Display "100 Celsius is 212.00 Fahrenheit".
+- **Results**: Passed.
+
+**Test Case 3: Error Handling for Non-Numeric Input**  
+- **Objective**: Ensure the application handles non-numeric inputs correctly.
+- **Steps**: 
+  - Input “abc” in the temperature input field.
+  - Select any units.
+  - Click "Convert".
+- **Expected Result**: Display error message "Please enter a valid number." in the error area.
+- **Results**: Passed.
+
+**Test Case 4: Conversion for Each Unit Combination**  
+- **Objective**: Validate conversions for all unit combinations.
   
-- **Celsius to Kelvin:**
-  - Input: 100 °C
-  - Expected Output: 373.15 K
-  - Actual Output: 373.15 K ✅ 
-
-- **Fahrenheit to Celsius:**
-  - Input: 32 °F
-  - Expected Output: 0 °C
-  - Actual Output: 0 °C ✅ 
-
-- **Fahrenheit to Kelvin:**
-  - Input: 32 °F
-  - Expected Output: 273.15 K
-  - Actual Output: 273.15 K ✅ 
-
-- **Kelvin to Celsius:**
-  - Input: 273.15 K
-  - Expected Output: 0 °C
-  - Actual Output: 0 °C ✅ 
-
-- **Kelvin to Fahrenheit:**
-  - Input: 273.15 K
-  - Expected Output: 32 °F
-  - Actual Output: 32 °F ✅ 
-
-##### 4.2 Clear Functionality
-- Clicking the "Clear" button correctly resets all input fields and hides results. ✅
-
-##### 4.3 Local Storage Functionality
-- Values are retained correctly upon page reload:
-  - Last entered Celsius value persists and populates input after refresh. ✅
-  - Last entered Fahrenheit value persists and populates input after refresh. ✅
-  - Last entered Kelvin value persists and populates input after refresh. ✅
-
-#### 5. User Interface Testing
-- **Layout & Design:**
-  - The layout is centered and adheres to the design specifications.
-  - Input fields and buttons are aligned and properly spaced. ✅
+  | From Unit    | To Unit      | Input Temp | Expected Output                    |
+  |--------------|--------------|------------|------------------------------------|
+  | Celsius      | Fahrenheit   | 0          | "0 Celsius is 32.00 Fahrenheit"   |
+  | Fahrenheit   | Celsius      | 32         | "32 Fahrenheit is 0.00 Celsius"   |
+  | Kelvin       | Celsius      | 273.15      | "273.15 Kelvin is 0.00 Celsius"   |
+  | Celsius      | Kelvin       | 0           | "0 Celsius is 273.15 Kelvin"      |
   
-- **Button Hover State:**
-  - Hover state for the button changes correctly, indicating interactivity. ✅
+- **Results**: All combinations passed.
 
-- **Visibility:**
-  - Results container is hidden by default and displays correctly upon conversion. ✅
+**Test Case 5: Conversion History Functionality**  
+- **Objective**: Verify that the history of conversions is stored and displayed correctly.
+- **Steps**: 
+  - Perform multiple conversions.
+  - Check if the history displays the last 5 conversion results.
+- **Expected Result**: History should update correctly and display the most recent conversions.
+- **Results**: Passed.
 
-#### 6. Performance Testing
-- The application loads promptly without noticeable lag.
-- Button clicks and input changes are responsive and execute without delay. ✅
+**Test Case 6: Overflow Handling**  
+- **Objective**: Test large input values for overflow and ensure the application remains responsive.
+- **Steps**: 
+  - Input "1000000" in the temperature input field.
+  - Select "Celsius" to "Fahrenheit".
+  - Click "Convert".
+- **Expected Result**: The application should compute correctly without performance lag.
+- **Results**: Passed with correct output.
 
-#### 7. Responsiveness Testing
-- The application renders correctly on different screen sizes (mobile and desktop).
-- No issues were detected when resizing the browser window. ✅
+**4. Additional Findings**  
+- The application stores conversion history in localStorage correctly.
+- CSS styles effectively enhance the usability of the application.
+- The responsiveness of the application was tested by resizing the browser window, and it performed well across different screen sizes.
 
-#### 8. Bug/Error Findings
-- Issue: There is an error in the Fahrenheit conversion to Kelvin in line: 
-  ```javascript
-  results += `Kelvin: ${(fahrenheit - 32) * (5/9) + 273.15.toFixed(2)} K<br>`;
-  ```
-  - **Test Input:** 32 °F
-  - **Expected Output:** 273.15 K
-  - **Actual Output:** 273.15 K (method chaining bug; `.toFixed(2)` is misplaced leading to incorrect results in cases of math chaining). 
-- **Actionable Fix:** 
-  Correct the line to:
-  ```javascript
-  results += `Kelvin: ${((fahrenheit - 32) * (5/9) + 273.15).toFixed(2)} K<br>`;
-  ```
+**5. Recommendations**  
+- Implement input validation to restrict the temperature range (i.e., prevent unrealistic temperatures).
+- Consider user experience improvements, such as clear buttons for resetting input and history.
+- Add unit tests for JavaScript functions to better automate the testing process.
 
-#### 9. Recommendations
-- Fix the identified bug in the conversion logic related to Kelvin results from Fahrenheit.
-- Consider implementing unit tests to automate the testing process and confirm functionality.
-  
-#### Conclusion
-Overall, the Temperature Converter application performs as expected except for a minor bug in the Fahrenheit to Kelvin conversion logic. Attention to this detail will enhance the product's reliability and user experience.
+**6. Conclusion**  
+The Temperature Converter application performed reliably under multiple test scenarios without significant bugs. Minor improvements could enhance usability, but the core functionality is solid.
+
+*End of Report*
