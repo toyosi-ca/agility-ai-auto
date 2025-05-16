@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color, white);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+        }
+
+        footer a {
+            margin: 0 10px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1 id="hello-message">Hello, World!</h1>
+        <button id="change-text-button">Change Text</button>
+    </div>
+    <footer>
+        <a href="documentation.html">Project Documentation</a>
+        <a href="support.html">User Support</a>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const helloMessage = document.getElementById('hello-message');
+            const changeTextButton = document.getElementById('change-text-button');
+
+            // Load saved background color from local storage (if exists)
+            const savedBgColor = localStorage.getItem('bgColor');
+            if (savedBgColor) {
+                document.body.style.setProperty('--bg-color', savedBgColor);
+            }
+
+            // Button click event to change text
+            changeTextButton.addEventListener('click', () => {
+                const userInput = prompt("Enter a new phrase:");
+                if (userInput) {
+                    helloMessage.textContent = userInput;
+                }
+            });
+
+            // Change background color example
+            document.body.addEventListener('click', function() {
+                const newBgColor = prompt("Enter a background color (name or hex code):");
+                if (newBgColor) {
+                    document.body.style.setProperty('--bg-color', newBgColor);
+                    localStorage.setItem('bgColor', newBgColor);
+                }
+            });
+        });
+
+        // Unit Tests
+        function testChangeText() {
+            const originalText = document.getElementById('hello-message').textContent;
+            const newText = "Test Message";
+            document.getElementById('hello-message').textContent = newText;
+            console.assert(document.getElementById('hello-message').textContent === newText, 'Change Text Test Failed');
+            document.getElementById('hello-message').textContent = originalText; // reset
+        }
+
+        function testBackgroundColor() {
+            const testColor = "lightblue";
+            document.body.style.setProperty('--bg-color', testColor);
+            localStorage.setItem('bgColor', testColor);
+            // Simulate page load
+            const savedBgColor = localStorage.getItem('bgColor');
+            console.assert(savedBgColor === testColor, 'Background Color Test Failed');
+            localStorage.removeItem('bgColor'); // Cleanup
+        }
+
+        testChangeText();
+        testBackgroundColor();
+    </script>
+</body>
+</html>
