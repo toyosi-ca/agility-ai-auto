@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Information App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #6495ed;
+            padding: 20px;
+            color: white;
+        }
+        main {
+            margin: 20px;
+        }
+        input {
+            padding: 10px;
+            width: 80%;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        #weather-info {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: none;
+            background-color: #e0e7ff;
+        }
+        .hidden {
+            display: none;
+        }
+        @media (max-width: 600px) {
+            input, button {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Weather Information App</h1>
+    </header>
+    <main>
+        <input type="text" id="location-input" placeholder="Enter city or allow location access" />
+        <button id="get-weather-btn">Get Weather</button>
+        <div id="weather-info" class="hidden">
+            <h2 id="location"></h2>
+            <p id="temperature"></p>
+            <p id="conditions"></p>
+            <p id="wind"></p>
+            <p id="humidity"></p>
+        </div>
+    </main>
+    <script>
+        const apiKey = 'YOUR_API_KEY_HERE';
+        
+        document.getElementById('get-weather-btn').addEventListener('click', function () {
+            const locationInput = document.getElementById('location-input').value;
+            if (locationInput) {
+                fetchWeatherData(locationInput);
+            } else {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(position => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        fetchWeatherData(`${lat},${lon}`);
+                    }, () => {
+                        alert('Geolocation access denied. Please enter a location.');
+                    });
+                } else {
+                    alert('Geolocation is not supported by this browser.');
+                }
+            }
+        });
+
+        function fetchWeatherData(location) {
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Weather data not available');
+                    return response.json();
+                })
+                .then(data => {
+                    displayWeatherData(data);
+                    saveLocation(location);
+                })
+                .catch(error => {
+                    alert('Error: ' + error.message);
+                });
+        }
+
+        function displayWeatherData(data) {
+            document.getElementById('location').innerText = `${data.name}, ${data.sys.country}`;
+            document.getElementById('temperature').innerText = `Temperature: ${data.main.temp}°C`;
+            document.getElementById('conditions').innerText = `Conditions: ${data.weather[0].description}`;
+            document.getElementById('wind').innerText = `Wind Speed: ${data.wind.speed} m/s`;
+            document.getElementById('humidity').innerText = `Humidity: ${data.main.humidity}%`;
+            document.getElementById('weather-info').classList.remove('hidden');
+        }
+
+        function saveLocation(location) {
+            localStorage.setItem('lastLocation', location);
+        }
+
+        window.onload = function () {
+            const lastLocation = localStorage.getItem('lastLocation');
+            if (lastLocation) {
+                document.getElementById('location-input').value = lastLocation;
+                fetchWeatherData(lastLocation);
+            }
+        };
+    </script>
+</body>
+</html>
+### Unit Tests
+<script>
+    const assert = require('assert');
+
+    function testSaveLocation() {
+        const testLocation = 'London';
+        saveLocation(testLocation);
+        const storedLocation = localStorage.getItem('lastLocation');
+        assert.strictEqual(storedLocation, testLocation, "Location should be saved correctly.");
+    }
+
+    function testDisplayWeatherData() {
+        const testData = {
+            name: "London",
+            sys: { country: "GB" },
+            main: { temp: 15, humidity: 80 },
+            wind: { speed: 5 },
+            weather: [{ description: "clear sky" }]
+        };
+
+        document.body.innerHTML = `
+            <h2 id="location"></h2>
+            <p id="temperature"></p>
+            <p id="conditions"></p>
+            <p id="wind"></p>
+            <p id="humidity"></p>
+            <div id="weather-info" class="hidden"></div>
+        `;
+
+        displayWeatherData(testData);
+
+        assert.strictEqual(document.getElementById('location').innerText, "London, GB", "Location should display correctly.");
+        assert.strictEqual(document.getElementById('temperature').innerText, "Temperature: 15°C", "Temperature should display correctly.");
+        assert.strictEqual(document.getElementById('conditions').innerText, "Conditions: clear sky", "Conditions should display correctly.");
+        assert.strictEqual(document.getElementById('wind').innerText, "Wind Speed: 5 m/s", "Wind speed should display correctly.");
+        assert.strictEqual(document.getElementById('humidity').innerText, "Humidity: 80%", "Humidity should display correctly.");
+    }
+
+    // Run tests
+    testSaveLocation();
+    testDisplayWeatherData();
+</script>
