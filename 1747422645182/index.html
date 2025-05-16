@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nigerian Cake E-commerce Website</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        body {
+            background-color: #FFFFFF;
+            color: #000000;
+        }
+        header {
+            background-color: #FFD700;
+            padding: 20px;
+            text-align: center;
+        }
+        nav {
+            margin: 20px 0;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: black;
+        }
+        section {
+            padding: 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .featured-cakes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .cake {
+            border: 1px solid #dddddd;
+            padding: 10px;
+            text-align: center;
+        }
+        footer {
+            background-color: #FFD700;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Nigerian Cake Shop</h1>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#products">Products</a>
+            <a href="#blog">Blog</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+    <section class="hero">
+        <h2>Welcome to Our Delicious Cake Shop!</h2>
+        <p>Discover a variety of cakes for every occasion.</p>
+    </section>
+    <section>
+        <h2>Featured Cakes</h2>
+        <div class="featured-cakes" id="featuredCakes">
+            <!-- Cakes will be injected here -->
+        </div>
+    </section>
+    <footer>
+        <p>Contact Us: info@nigeriancakeshop.com | Follow us on Social Media</p>
+    </footer>
+    <script>
+        const cakes = [
+            { id: 1, title: 'Chocolate Cake', price: 15, image: 'chocolate.jpg' },
+            { id: 2, title: 'Vanilla Cake', price: 12, image: 'vanilla.jpg' },
+            { id: 3, title: 'Red Velvet Cake', price: 18, image: 'redvelvet.jpg' }
+        ];
+
+        const displayCakes = () => {
+            const cakeContainer = document.getElementById('featuredCakes');
+            cakes.forEach(cake => {
+                const cakeElement = document.createElement('div');
+                cakeElement.classList.add('cake');
+                cakeElement.innerHTML = `
+                    <img src="${cake.image}" alt="${cake.title}" width="200px">
+                    <h3>${cake.title}</h3>
+                    <p>Price: $${cake.price}</p>
+                    <button onclick="addToCart(${cake.id})">Add to Cart</button>
+                `;
+                cakeContainer.appendChild(cakeElement);
+            });
+        };
+
+        const addToCart = (cakeId) => {
+            const cart = loadCartFromLocal();
+            const cake = cakes.find(c => c.id === cakeId);
+            if (cake) {
+                cart.push(cake);
+                saveCartToLocal(cart);
+                alert(`${cake.title} has been added to your cart!`);
+            }
+        };
+
+        const saveCartToLocal = (cart) => {
+            localStorage.setItem('cakeCart', JSON.stringify(cart));
+        };
+
+        const loadCartFromLocal = () => {
+            return JSON.parse(localStorage.getItem('cakeCart')) || [];
+        };
+
+        window.onload = displayCakes;
+
+        // Unit Tests
+        const unitTests = () => {
+            console.assert(loadCartFromLocal().length === 0, 'Failed: Cart should initialize empty.');
+
+            const testCake = { id: 1, title: 'Test Cake', price: 10, image: 'test.jpg' };
+            saveCartToLocal([testCake]);
+            const cart = loadCartFromLocal();
+            console.assert(cart.length === 1 && cart[0].title === 'Test Cake', 'Failed: Cart should contain added cake.');
+
+            console.log('All unit tests passed.');
+        };
+        unitTests();
+    </script>
+</body>
+</html>
