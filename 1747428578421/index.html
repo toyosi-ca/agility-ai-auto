@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header, footer {
+            background: #3b5998;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        h1 {
+            margin: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        .nav {
+            margin: 20px 0;
+        }
+        .nav a {
+            margin: 0 15px;
+            color: #3b5998;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input[type="text"], input[type="password"], input[type="submit"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .test {
+            margin: 20px 0;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .results {
+            display: none;
+            margin: 20px 0;
+            padding: 10px;
+            background: #e8f0fe;
+            border: 1px solid #3b5998;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Test Product</h1>
+    </header>
+    <div class="container">
+        <nav class="nav">
+            <a href="#" onclick="showPage('home');">Home</a>
+            <a href="#" onclick="showPage('signup');">Sign Up</a>
+            <a href="#" onclick="showPage('login');">Login</a>
+            <a href="#" onclick="showPage('dashboard');">Dashboard</a>
+        </nav>
+        <div id="home" class="page">
+            <h2>Welcome to Test Product</h2>
+            <p>Your knowledge assessment platform.</p>
+        </div>
+        <div id="signup" class="page" style="display: none;">
+            <h2>Sign Up</h2>
+            <form onsubmit="return signUp(event);">
+                <input type="text" id="signup-username" placeholder="Username" required>
+                <input type="password" id="signup-password" placeholder="Password" required>
+                <input type="submit" value="Sign Up">
+            </form>
+            <div id="signup-message"></div>
+        </div>
+        <div id="login" class="page" style="display: none;">
+            <h2>Login</h2>
+            <form onsubmit="return login(event);">
+                <input type="text" id="login-username" placeholder="Username" required>
+                <input type="password" id="login-password" placeholder="Password" required>
+                <input type="submit" value="Login">
+            </form>
+            <div id="login-message"></div>
+        </div>
+        <div id="dashboard" class="page" style="display: none;">
+            <h2>Dashboard</h2>
+            <div class="test">
+                <h3>Create or Take a Test</h3>
+                <button onclick="showPage('testCreation');">Create Test</button>
+                <button onclick="showPage('testTaking');">Take Test</button>
+            </div>
+            <div id="user-stats" class="results"></div>
+        </div>
+        <div id="testCreation" class="page" style="display: none;">
+            <h2>Create a Test</h2>
+            <form onsubmit="return createTest(event);">
+                <select id="question-type">
+                    <option value="multiple-choice">Multiple Choice</option>
+                    <option value="true-false">True/False</option>
+                    <option value="short-answer">Short Answer</option>
+                </select>
+                <input type="text" id="test-title" placeholder="Test Title" required>
+                <button type="submit">Save Test</button>
+            </form>
+            <div id="creation-message"></div>
+        </div>
+        <div id="testTaking" class="page" style="display: none;">
+            <h2>Take a Test</h2>
+            <div id="questions-container"></div>
+            <button onclick="submitTest();">Submit Test</button>
+            <div id="test-results" class="results"></div>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2023 Test Product</p>
+    </footer>
+    <script>
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            document.getElementById(page).style.display = 'block';
+        }
+    
+        function signUp(event) {
+            event.preventDefault();
+            const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
+            if (users.find(u => u.username === username)) {
+                document.getElementById('signup-message').innerText = 'User already exists!';
+                return false;
+            }
+            const newUser = { username, password: hashPassword(password) };
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            document.getElementById('signup-message').innerText = 'Sign up successful!';
+            return false;
+        }
+    
+        function login(event) {
+            event.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            const user = users.find(u => u.username === username && u.password === hashPassword(password));
+            if (user) {
+                document.getElementById('login-message').innerText = 'Login successful!';
+                showPage('dashboard');
+            } else {
+                document.getElementById('login-message').innerText = 'Invalid credentials!';
+            }
+            return false;
+        }
+    
+        function createTest(event) {
+            event.preventDefault();
+            const title = document.getElementById('test-title').value;
+            const type = document.getElementById('question-type').value;
+            const testData = { title, type };
+            localStorage.setItem('savedTest', JSON.stringify(testData));
+            document.getElementById('creation-message').innerText = 'Test saved successfully!';
+            return false;
+        }
+    
+        function submitTest() {
+            const testResults = { score: Math.floor(Math.random() * 100), timeTaken: Math.floor(Math.random() * 60) };
+            localStorage.setItem('testResults', JSON.stringify(testResults));
+            document.getElementById('test-results').style.display = 'block';
+            document.getElementById('test-results').innerText = `Your score: ${testResults.score}, Time taken: ${testResults.timeTaken} minutes.`;
+        }
+    
+        function hashPassword(password) {
+            return btoa(password); // basic hashing example for illustration
+        }
+    </script>
+</body>
+</html>
