@@ -1,163 +1,127 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gideon Peters - Landing Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .hero {
-            background-image: url('path-to-hero-image.jpg');
-            background-size: cover;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-align: center;
-        }
-        .cta-button {
-            background-color: #4169E1;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .biography, .music, .gallery, .contact {
-            padding: 20px;
-            max-width: 800px;
-            margin: 20px auto;
-        }
-        .gallery .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px;
-        }
-        @media (max-width: 600px) {
-            .cta-button {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
-<body>
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Gideon Peters</h1>
-            <p>Your go-to artist for soulful tunes</p>
-            <a href="link-to-music-platform" class="cta-button">Listen Now</a>
-        </div>
-    </section>
-    
-    <section class="biography">
-        <h2>Biography</h2>
-        <p id="bio-short">Short biography...</p>
-        <button id="expand-bio">Read More</button>
-        <div id="bio-full" style="display: none;">Full biography...</div>
-    </section>
-    
-    <section class="music">
-        <h2>Listen to My Music</h2>
-        <iframe src="link-to-embedded-music-player" width="300" height="200"></iframe>
-        <p>
-            <a href="link-to-apples-music">Apple Music</a> | 
-            <a href="link-to-youtube">YouTube</a>
-        </p>
-    </section>
-    
-    <section class="gallery">
-        <h2>Gallery</h2>
-        <div class="grid">
-            <img src="optimized-image1.jpg" alt="Gideon performing" />
-            <img src="optimized-image2.jpg" alt="Collaboration" />
-        </div>
-    </section>
-    
-    <section class="contact">
-        <h2>Contact Me</h2>
-        <form id="contact-form">
-            <input type="text" placeholder="Your Name" required />
-            <input type="email" placeholder="Your Email" required />
-            <textarea placeholder="Your Message" required></textarea>
-            <button type="submit">Send</button>
-        </form>
-        <p>Follow me on social media</p>
-    </section>
-    
-    <script>
-        document.getElementById('contact-form').addEventListener('input', function() {
-            localStorage.setItem('contact_form', JSON.stringify({
-                name: document.querySelector('input[type="text"]').value,
-                email: document.querySelector('input[type="email"]').value,
-                message: document.querySelector('textarea').value
-            }));
-        });
-
-        window.onload = function() {
-            const savedData = JSON.parse(localStorage.getItem('contact_form'));
-            if (savedData) {
-                document.querySelector('input[type="text"]').value = savedData.name;
-                document.querySelector('input[type="email"]').value = savedData.email;
-                document.querySelector('textarea').value = savedData.message;
-            }
-        };
-
-        document.getElementById('expand-bio').addEventListener('click', function() {
-            const bioFull = document.getElementById('bio-full');
-            bioFull.style.display = bioFull.style.display === 'none' ? 'block' : 'none';
-            this.textContent = this.textContent === 'Read More' ? 'Read Less' : 'Read More';
-        });
-    </script>
-</body>
-</html>
-
-unit tests for the frontend code:
-
-<script>
-    // Simple unit tests for the contact form
-    function testLocalStorage() {
-        // Setup
-        localStorage.clear();
-        const input = {
-            name: 'Test Name',
-            email: 'test@example.com',
-            message: 'This is a test message.'
-        };
-        document.querySelector('input[type="text"]').value = input.name;
-        document.querySelector('input[type="email"]').value = input.email;
-        document.querySelector('textarea').value = input.message;
-
-        // Simulate input event
-        document.getElementById('contact-form').dispatchEvent(new Event('input'));
-
-        const retrievedData = JSON.parse(localStorage.getItem('contact_form'));
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Full-Screen Tetris Game</title>  
+    <style>  
+        body {  
+            margin: 0;  
+            overflow: hidden;  
+            display: flex;  
+            justify-content: center;  
+            align-items: center;  
+            height: 100vh;  
+            background-color: #222;  
+            color: white;  
+            font-family: Arial, sans-serif;  
+        }  
+        canvas {  
+            border: 1px solid #fff;  
+        }  
+        .hud {  
+            position: absolute;  
+            top: 10px;  
+            left: 10px;  
+            z-index: 10;  
+        }  
+        .button {  
+            margin: 5px;  
+            padding: 10px 15px;  
+            background-color: #444;  
+            color: white;  
+            border: none;  
+            cursor: pointer;  
+        }  
+        .button:hover {  
+            background-color: #666;  
+        }  
+    </style>  
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>  
+</head>  
+<body>  
+    <div class="hud">  
+        <div id="score">Score: 0</div>  
+        <button id="startBtn" class="button">Play</button>  
+        <button id="instructionBtn" class="button">Instructions</button>  
+        <button id="highScoresBtn" class="button">High Scores</button>  
+        <div id="highScores"></div>  
+    </div>  
+    <script>  
+        let config = {  
+            type: Phaser.AUTO,  
+            width: 320,  
+            height: 640,  
+            backgroundColor: '#000',  
+            physics: {  
+                default: 'arcade',  
+                arcade: {  
+                    gravity: { y: 0 },  
+                    debug: false  
+                }  
+            },  
+            scene: {  
+                preload: preload,  
+                create: create,  
+                update: update  
+            }  
+        };  
+        let game = new Phaser.Game(config);  
+        let score = 0;  
+        let highScores = JSON.parse(localStorage.getItem('highScores')) || [];  
+        document.getElementById('startBtn').addEventListener('click', startGame);  
+        document.getElementById('instructionBtn').addEventListener('click', showInstructions);  
+        document.getElementById('highScoresBtn').addEventListener('click', showHighScores);  
         
-        console.assert(retrievedData.name === input.name, 'Name should match');
-        console.assert(retrievedData.email === input.email, 'Email should match');
-        console.assert(retrievedData.message === input.message, 'Message should match');
-        
-        console.log('Local Storage Test Passed');
-    }
-
-    function testBioExpandCollapse() {
-        // Setup
-        document.getElementById('expand-bio').click();
-        console.assert(document.getElementById('bio-full').style.display === 'block', 'Bio should be expanded');
-        
-        document.getElementById('expand-bio').click();
-        console.assert(document.getElementById('bio-full').style.display === 'none', 'Bio should be collapsed');
-
-        console.log('Biography Expand/Collapse Test Passed');
-    }
-
-    // Running tests
-    testLocalStorage();
-    testBioExpandCollapse();
-</script>
+        function preload() {  
+            // Load assets  
+        }  
+        function create() {  
+            this.input.keyboard.on('keydown', handleInput);  
+            score = 0;  
+            updateScore();  
+        }  
+        function update() {  
+            // Game loop logic  
+        }  
+        function handleInput(event) {  
+            // Handle key input  
+        }  
+        function startGame() {  
+            score = 0;  
+            updateScore();  
+            // Initialize game state  
+        }  
+        function updateScore() {  
+            document.getElementById('score').innerText = `Score: ${score}`;  
+        }  
+        function saveHighScore() {  
+            highScores.push(score);  
+            highScores.sort((a, b) => b - a);  
+            if (highScores.length > 5) highScores.pop();  
+            localStorage.setItem('highScores', JSON.stringify(highScores));  
+        }  
+        function showInstructions() {  
+            alert("Instructions: Use arrow keys to move and rotate Tetris pieces.");  
+        }  
+        function showHighScores() {  
+            document.getElementById('highScores').innerText = `High Scores: ${highScores.join(', ')}`;  
+        }  
+    </script>  
+</body>  
+</html>  
+function testGame() {  
+    // Test suite for Tetris game  
+    let testHighScores = () => {  
+        localStorage.clear();  
+        let scores = [100, 200, 150];  
+        scores.forEach(score => {  
+            localStorage.setItem('highScores', JSON.stringify([score]));  
+            let retrieved = JSON.parse(localStorage.getItem('highScores'));  
+            console.assert(retrieved[0] === score, `Expected ${score}, got ${retrieved[0]}`);  
+        });  
+        console.log('High Scores tests passed');  
+    };  
+    testHighScores();  
+}  
+testGame();

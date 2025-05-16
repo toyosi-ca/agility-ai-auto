@@ -1,72 +1,94 @@
-**Product Requirements Document (PRD)**  
+# Product Requirements Document (PRD) for Full-Screen Tetris Game
 
-**Project Title:** Landing Page for Gideon Peters  
+## 1. Project Overview
+The objective of this project is to develop a full-screen Tetris game that provides an immersive user experience through engaging gameplay mechanics and a visually striking color scheme of yellow and black.
 
-**Project Overview:**  
-Develop a responsive and intuitive landing page for musician Gideon Peters. The landing page should reflect the artist's personality, showcase his music, and encourage visitor engagement. The primary color to be used throughout the page is royal blue, creating a visually appealing and consistent tone.  
+## 2. Goals and Objectives
+- Develop an engaging full-screen Tetris game.
+- Utilize a color palette of yellow and black to enhance visual appeal.
+- Ensure smooth performance across various devices and platforms (web and mobile).
+- Implement a user-friendly interface for both new and experienced players.
+- Incorporate features to enhance replay value and competitive play (e.g., scoring system, high scores).
 
-**Project Goals:**  
-- Create a visually engaging landing page that accurately represents Gideon Peters as an artist.  
-- Ensure the landing page is fully responsive across all devices (desktops, tablets, smartphones).  
-- Use lightweight images to optimize load times and improve the user experience.  
-- Maintain a user-friendly interface that encourages visitors to explore Gideon’s music and other content.  
+## 3. Target Audience
+- Casual gamers seeking quick and enjoyable gameplay.
+- Puzzle enthusiasts interested in classic games.
+- Users from ages 10 and above.
 
-**Target Audience:**  
-- Fans of Gideon Peters  
-- Potential new listeners  
-- Music industry professionals (producers, agents, etc.)  
+## 4. Features and Requirements
 
-**Features and Functional Requirements:**  
+### 4.1 Gameplay
+- **Game Mechanics**: 
+  - Standard Tetris gameplay rules including piece rotation, line clearance, and game over mechanics.
+- **Controls**: 
+  - Arrow keys or swipe gestures for mobile users for left/right movement, rotation, and drop.
+- **Game Modes**:
+  - **Classic Mode**: Traditional Tetris gameplay with increasing speed as levels progress.
+  - **Timed Mode**: Players must clear a set number of lines within a time limit.
+  - **Endless Mode**: Players play until they can no longer fit any pieces on the screen.
 
-1. **Design:**  
-   - **Color Scheme:** Primary color should be royal blue, with complementary colors for text and background that enhance readability.  
-   - **Typography:** Use modern, legible fonts for headings and body text. Headings should be bold and eye-catching.  
-   - **Layout:** Clear and intuitive layout that guides visitors to main content areas such as music, biography, and contact information.
+### 4.2 User Interface
+- Full-screen layout that adapts to different screen sizes and resolutions.
+- **Color Scheme**: 
+  - Background: Black.
+  - Tetris pieces: Yellow with variations in shades for differentiation.
+- **HUD Elements**:
+  - Current piece showing on the side.
+  - Score display at the top of the screen.
+  - Level indicator adjacent to the score.
+  - Next piece preview at the bottom right of the screen.
+- **Start/End Screens**:
+  - Starting screen with 'Play', 'Instructions', and 'High Scores' buttons.
+  - End game screen displaying final score with options to 'Restart' or 'Exit'.
 
-2. **Responsive Design:**  
-   - The page should be designed to adapt to various screen sizes (desktop, tablet, smartphone).  
-   - Elements should adjust in size and layout to ensure usability and visual appeal across all devices.  
+### 4.3 Scoring System
+- Each line cleared gives players a score:
+  - Single line: 100 points.
+  - Double line: 300 points.
+  - Triple line: 500 points.
+  - Tetris (four lines at once): 800 points.
+- Bonus points for clearing multiple lines in quick succession.
+- High score leaderboard to store and display the highest scores.
 
-3. **Content Sections:**  
-   - **Hero Section:**  
-     - Large, engaging image or slider featuring Gideon Peters with a short tagline or description.  
-     - Call-to-action (CTA) button linked to music/streaming platforms.  
+### 4.4 Audio
+- Background music that complements gameplay, adjustable on the settings menu.
+- Sound effects for piece rotation, line clearing, and game over events.
 
-   - **Biography Section:**  
-     - Short biography of Gideon Peters, highlighting his music style, influences, and achievements.  
-     - Utilize a clean, readable layout with optional expandable sections for detailed information.  
+## 5. Technical Requirements
+- **Platform**: Web-based application and mobile optimization being an essential consideration.
+- **Technology Stack**:
+  - Frontend: JavaScript/HTML5/CSS3 with a library like Phaser.js for game development.
+  - Backend: Simple Node.js server for score management.
+- **Performance**: The game must maintain a minimum of 60 frames per second on all supported devices.
 
-   - **Music Section:**  
-     - Embedded music player showcasing 2-3 of Gideon’s top songs (Spotify, SoundCloud, etc.).  
-     - Links to purchase/stream the music on various platforms (Apple Music, YouTube, etc.).  
+## 6. Non-functional Requirements
+- **Responsiveness**: Game must render correctly across various screen sizes and orientations.
+- **Accessibility**: Game controls should be easily navigable; consider color blindness options.
+- **Load Time**: Minimal load time, under 3 seconds for the main game.
 
-   - **Gallery Section:**  
-     - Lightweight images showcasing Gideon during performances, collaborations, and promotional events.  
-     - Use a grid layout for images, ensuring they do not impact page load speed.  
+## 7. Milestones and Timeline
+- **Week 1-2**: Requirement gathering and initial design mockups.
+- **Week 3-5**: Development of core game mechanics.
+- **Week 6**: UI Implementation.
+- **Week 7**: Audio and performance optimizations.
+- **Week 8**: Internal testing and bug fixing.
+- **Week 9**: Final adjustments and deployment.
 
-   - **Contact Section:**  
-     - Simple contact form for inquiries (Name, Email, Message fields).  
-     - Links to social media accounts for visitors to follow Gideon.  
+## 8. Success Metrics
+- Successful launch without critical bugs.
+- User feedback with positive ratings above 4/5 post-launch.
+- Average session duration of at least 10 minutes per user.
+- Achievement of over 1000 downloads within the first month of launch.
 
-4. **Technical Requirements:**  
-   - Images must be optimized for the web to ensure quick load times.  
-   - The page should be SEO-friendly, including relevant metadata, title tags, and alt text for images.  
-   - Cross-browser compatibility to ensure functionality across all major browsers.  
+## 9. Risks and Mitigation
+- **Risk**: Delays in development can push back the launch date.
+  - **Mitigation**: Regular progress check-ins and adjust the scope if needed to meet deadlines.
+- **Risk**: Potential performance issues on lower-end devices.
+  - **Mitigation**: Optimize game assets and test on a range of devices.
 
-5. **Performance Requirements:**  
-   - Page load time should be under 3 seconds to enhance user experience.  
-   - Optimize for mobile speed and performance using techniques such as image compression and minimized CSS/JavaScript.  
+## 10. Conclusion
+This PRD outlines the vision for a full-screen Tetris game adhering to the specified color theme of yellow and black. By following this comprehensive guide, the development team can create an engaging and enjoyable product targeted at a broad audience while ensuring technical quality and usability. 
 
-**Timeline:**  
-- **Initial Design Mockup:** 1 week  
-- **Development:** 2-3 weeks  
-- **Testing and Revisions:** 1 week  
-- **Launch:** Target launch within 5 weeks of project kickoff.  
+---
 
-**Success Metrics:**  
-- Unique visitors to the landing page in the first month post-launch.  
-- Engagement rates measured by time spent on the page and number of interactions (e.g., song plays, form submissions).  
-- Increase in social media followers and streaming metrics post-launch.  
-
-**Conclusion:**  
-This PRD outlines the vision and requirements for creating a stunning and functional landing page for Gideon Peters. With a focus on user experience, performance, and effective representation of the artist, this project aims to enhance Gideon's online presence and strengthen his connection with fans and potential listeners.
+This PRD serves as a detailed guideline for the development of the full-screen Tetris game, ensuring every stakeholder understands the objectives, requirements, and functionalities expected in the delivered product.

@@ -1,51 +1,56 @@
-# Deployment Documentation for HR Management System
+# Deployment Documentation for Gideon Peters - Landing Page
 
 ## Overview
-This document outlines the steps to deploy the HR Management System application to GitHub Pages.
+This document provides comprehensive steps to deploy the Gideon Peters landing page to GitHub Pages using the output/build directory.
 
-## Pre-requisites
-1. **GitHub Account**: Ensure you have an active GitHub account.
-2. **Repository**: Create a new GitHub repository to store your project code.
-3. **Local Development Environment**: Set up your local environment with the necessary tools including Git.
+## Prerequisites
+- A GitHub account.
+- Git installed on your local machine.
+- Node.js and npm (if using a build tool).
 
 ## Steps to Deploy
 
-### 1. Clone the Repository
-First, clone the repository where you will push your code.
+### 1. Prepare Your Project
+Ensure that your landing page is ready and all necessary files are generated in the output/build directory. The landing page should comply with HTML, CSS, and JavaScript standards.
 
+### 2. Initialize Git Repository
+If you haven't already, navigate to your project directory in the terminal and initialize a new git repository:
 ```bash
-git clone https://github.com/yourusername/your-repo-name.git
-cd your-repo-name
+git init
 ```
 
-### 2. Prepare the Build Directory
-Ensure that your project is built and that all necessary files are present in the `output/build` directory. You may need to run your build commands here if applicable.
-
-### 3. Push the Code to GitHub
-Add, commit, and push your changes to the `main` branch of your GitHub repository:
-
+### 3. Commit Your Code
+Add all your files to the repository and commit the changes:
 ```bash
 git add .
-git commit -m "Initial commit of HR Management System"
-git push origin main
+git commit -m "Initial commit of Gideon Peters Landing Page"
 ```
 
-### 4. Deploy to GitHub Pages
-Now deploy the application to GitHub Pages. Using the build path, execute the following:
-
-```json
-{"build_path": "output/build"}
+### 4. Push to GitHub
+Create a new repository on GitHub, then link your local repository to the remote repository:
+```bash
+git remote add origin https://github.com/username/repository-name.git
+git branch -M main
+git push -u origin main
 ```
 
-#### Tool Used
-- **Deploy to Github Pages**: This tool helps to deploy the frontend code directly to GitHub Pages which makes it accessible via a URL.
+### 5. Deploy to GitHub Pages
+Now that your code is pushed to GitHub, you can deploy it to GitHub Pages. Use the following tool to deploy:
+```
+Action: Deploy to Github Pages
+Action Input: {"build_path":"output/build"}
+```
 
-### 5. Access the Application
-Once the deployment process is complete, navigate to:
-```
-https://yourusername.github.io/your-repo-name/
-```
-to view your application.
+### 6. Verify Deployment
+After deployment, go to `https://username.github.io/repository-name/` to see your landing page live. Make sure to replace `username` and `repository-name` with your actual GitHub username and the name of the repository.
+
+## Testing the Features
+Ensure that all features work correctly:
+- Verify that the contact form correctly stores data in local storage.
+- Check that the biography section expands and collapses as expected.
+
+### Unit Tests
+You can incorporate simple unit tests to verify the functionality of the contact form and the biography expand/collapse feature as provided in the initial code.
 
 ## Conclusion
-Your HR Management System is now deployed and accessible online! Make sure to test all functionalities to confirm everything is working as expected.
+Following these steps will successfully deploy the Gideon Peters landing page to GitHub Pages, making it accessible to the public. Adjust links and content as necessary to fit your actual deployment scenario.

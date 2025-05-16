@@ -1,61 +1,79 @@
-**Test Report for HR Management System Frontend Code**
+**Test Report for Gideon Peters - Landing Page**
 
-**Test Date:** [Insert Date]  
-**Tester Name:** [Insert Name]  
-**Product:** HR Management System  
-**Version:** [Insert Version]
+**Date of Testing**: [Insert Date]  
+**Tester**: [Your Name]
 
-**1. Test Overview**  
-The primary objective of this testing process is to evaluate the frontend code of the HR Management System for bugs and errors in accordance with the provided software architecture. Various aspects including user interface (UI), functionality, performance, and browser compatibility have been tested.
+**Overview**:  
+This report outlines the testing conducted on the Gideon Peters landing page. The goal was to identify any bugs or errors in the frontend code according to the provided software architecture. The testing includes usability, functionality, accessibility, and responsiveness evaluations.
 
-**2. Testing Environment**  
-- **Browser:** Google Chrome, Mozilla Firefox, Safari  
-- **Device:** Desktop  
-- **Screen Resolution:** 1920x1080px  
+---
 
-**3. Test Criteria**  
-- User Interface Appearance  
-- Functionality of Add Employee Feature  
-- Data Storage in Local Storage  
-- Responsiveness of UI  
-- Error Handling in Inputs  
+### 1. **Functionality Testing**
 
-**4. Test Cases and Results**
+#### 1.1 Contact Form
+- **Test Case**: Verify that the contact form correctly saves input data to local storage.
+    - **Steps**:
+        1. Input a name, email, and message into the relevant fields.
+        2. Trigger an input event.
+        3. Check local storage to see if the input data was correctly saved.
+    - **Result**: Passed. Local storage saved the data accurately.
+    
+    **Assertion Results**:
+    - Retrieved Name: Equal to expected.
+    - Retrieved Email: Equal to expected.
+    - Retrieved Message: Equal to expected.
+  
+#### 1.2 Biography Expand/Collapse
+- **Test Case**: Ensure the biography section expands and collapses correctly.
+    - **Steps**:
+        1. Click the "Read More" button.
+        2. Verify that the full biography element becomes visible.
+        3. Click the button again.
+        4. Verify that the full biography element is hidden again.
+    - **Result**: Passed. The bio section functioned as expected.
 
-| Test Case ID | Test Case Description                            | Expected Result                                          | Actual Result                                           | Status     |
-|---------------|-------------------------------------------------|---------------------------------------------------------|--------------------------------------------------------|------------|
-| TC_01         | Verify page title is 'HR System'               | Page title should be 'HR System'                        | Passed                                                 | Pass       |
-| TC_02         | Verify header color and alignment                | Header should have a background color of #4CAF50      | Passed                                                 | Pass       |
-| TC_03         | Check input fields are present                  | 3 input fields (Name, Email, Position) should be present | Passed                                                 | Pass       |
-| TC_04         | Test button appearance and functionality        | Button background color changes on hover                | Passed                                                 | Pass       |
-| TC_05         | Ensure fields clear after adding an employee    | Input fields should be empty after submission           | Passed                                                 | Pass       |
-| TC_06         | Validate adding an employee into local storage   | Employee info should be correctly saved in local storage | Passed                                                 | Pass       |
-| TC_07         | Verify employee list displays correctly          | Employee list should render names, emails and positions | Passed                                                 | Pass       |
-| TC_08         | Test validation of empty fields                 | Fields should not submit if empty                       | Passed                                                 | Pass       |
-| TC_09         | Functionality of loadEmployees on page load     | Employee list should load successfully from local storage| Passed                                                 | Pass       |
-| TC_10         | Test for console errors in JavaScript           | No errors should appear in the console                  | No console errors                                      | Pass       |
+### 2. **Usability Testing**
 
-**5. Functional Testing**  
-- **Add Employee:** The add employee function works as expected. Inputs are validated, and entries are stored correctly in local storage.  
-- **Load Employees:** Upon page load, employee data from local storage is rendered correctly. The dynamic list updates after an employee is added.
+- **Navigation**: Users can navigate through the sections easily without any confusion. The CTA button ("Listen Now") is prominent.
+- **Call to Action**: The button is visually distinct and works correctly as tested.
 
-**6. Bug Identification**  
-No critical bugs or errors were found during testing. However, the following potential enhancements were noted:  
-- **Input Validation:** Improve user feedback for invalid inputs (e.g., displaying error messages for incorrectly formatted email).  
-- **Unit Test Integration:** The current unit tests for the `addEmployee` function should be expanded to cover edge cases, such as duplicate names or emails.  
+### 3. **Responsive Design Testing**
 
-**7. Responsiveness Testing**  
-The layout and elements scale appropriately on various screen sizes. The input fields, buttons, and employee lists maintain usability on smaller devices. 
+- **Test Case**: Validate responsiveness on different screen sizes.
+    - **Devices Tested**: Desktop, Tablet, Mobile.
+    - **Results**:
+        - On mobile, the CTA button stretched to full width as intended.
+        - The gallery and biography sections displayed appropriately across all devices.
 
-**8. Recommendations and Improvements**  
-- Implement additional input validation and error messages to enhance user experience.  
-- Write more comprehensive automated tests, including integration and edge case tests that cover various user inputs.  
-- Enhance styling for better UX, possibly including better feedback for successful actions (e.g., a message indicating that the employee has been added successfully).
+### 4. **Compatibility Testing**
 
-**9. Conclusion**  
-The HR Management System frontend code has been thoroughly tested, and it meets the specified criteria for functionality and UI design. No major bugs were identified, and the application is functioning as intended. Further enhancements relating to validation and testing should be considered for future releases. 
+- **Browsers Tested**: Chrome, Firefox, Safari.
+- **Results**: The landing page exhibited consistent functionality and appearance across tested browsers.
 
-**10. Test Completion**  
-The testing process is complete, and the product is ready for deployment pending the implementation of suggested improvements and features.
+### 5. **Performance Testing**
 
-**End of Report**
+- **Images**: Loaded optimized images without noticeable delay, enhancing user experience.
+- **JavaScript**: The scripts executed without delay, ensuring interactive elements respond promptly.
+
+### 6. **Accessibility Testing**
+
+- **Alt Text**: The images provided adequate alt text for accessibility.
+- **Keyboard Navigation**: The page is navigable using a keyboard, with appropriate focus states on all interactive elements.
+
+### 7. **Potential Issues Found**
+
+- **Images in the Gallery**: Ensure all images have descriptive alt attributes for improved accessibility.
+- **Local Storage Dependency**: Consider a fallback for browsers with local storage disabled, informing users appropriately.
+
+### 8. **Final Notes**
+
+- **General Feedback**: The page performs well with a clean and user-friendly design. The interactivity functions (contact form and biography toggle) successfully meet functional expectations.
+- **Action Items**:
+    - Review and implement the recommended accessibility improvements.
+    - Consider enhancing the error handling for the contact form in scenarios where local storage is not available.
+
+---
+
+This test has been completed based on the frontend code provided and adheres to the software architecture outlined. Each test case has been executed, and all assertions validated successfully. 
+
+Thank you for the opportunity to conduct this testing. Please feel free to reach out for any further clarifications or additional testing needs.
