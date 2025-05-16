@@ -3,174 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Landing page for Musician Name, promoting brand and music.">
-    <title>Musician Name - Official Site</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>HR System</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; }
+        header { background-color: #4CAF50; padding: 1em; text-align: center; color: white; }
+        main { padding: 20px; }
+        button { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        input[type="text"], input[type="email"], textarea { width: 100%; padding: 10px; margin: 10px 0; }
+        .employee-list { margin-top: 20px; }
+        .employee { border: 1px solid #ccc; padding: 10px; margin: 5px 0; }
+        .form-container { max-width: 600px; margin: auto; }
+    </style>
 </head>
 <body>
     <header>
-        <div class="logo"><a href="#home">Musician Name</a></div>
-        <nav>
-            <ul>
-                <li><a href="#about">About</a></li>
-                <li><a href="#music">Music</a></li>
-                <li><a href="#events">Events</a></li>
-                <li><a href="#merch">Merchandise</a></li>
-                <li><a href="#newsletter">Newsletter</a></li>
-            </ul>
-        </nav>
+        <h1>HR Management System</h1>
     </header>
-
-    <section id="hero">
-        <h1>Welcome to the Official Site of Musician Name</h1>
-        <button id="listenButton">Listen to Music</button>
-    </section>
-
-    <section id="about">
-        <h2>About</h2>
-        <p>Musician Name is a talented artist known for... [bio content]</p>
-    </section>
-
-    <section id="music">
-        <h2>Music</h2>
-        <audio id="musicPlayer" controls></audio>
-        <button onclick="playMusic()">Play Latest Track</button>
-    </section>
-
-    <section id="events">
-        <h2>Upcoming Events</h2>
-        <ul id="eventsList">
-            <li><a href="#event1">Concert in City A</a></li>
-            <li><a href="#event2">Concert in City B</a></li>
-        </ul>
-    </section>
-
-    <section id="merch">
-        <h2>Merchandise</h2>
-        <div class="merchandise-grid" id="merchList">
-            <div class="item"><img src="merch1.jpg" alt="Merch Item 1"><p>Merch Item 1</p></div>
-            <div class="item"><img src="merch2.jpg" alt="Merch Item 2"><p>Merch Item 2</p></div>
+    <main>
+        <div class="form-container">
+            <h2>Add Employee</h2>
+            <input type="text" id="empName" placeholder="Name" required>
+            <input type="email" id="empEmail" placeholder="Email" required>
+            <input type="text" id="empPosition" placeholder="Position" required>
+            <button onclick="addEmployee()">Add Employee</button>
         </div>
-    </section>
-
-    <section id="newsletter">
-        <h2>Sign Up for Our Newsletter</h2>
-        <form onsubmit="saveEmail(); return false;">
-            <input type="email" id="emailInput" placeholder="Enter your email" required>
-            <button type="submit">Subscribe</button>
-        </form>
-        <p id="confirmationMessage"></p>
-    </section>
-
-    <footer>
-        <p>&copy; 2023 Musician Name. All rights reserved.</p>
-        <div class="socials">
-            <a href="https://facebook.com/musicianname" target="_blank">Facebook</a>
-            <a href="https://twitter.com/musicianname" target="_blank">Twitter</a>
-            <a href="https://instagram.com/musicianname" target="_blank">Instagram</a>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
+        <div class="employee-list" id="employeeList"></div>
+    </main>
+    <script>
+        function loadEmployees() {
+            const employees = JSON.parse(localStorage.getItem('employees')) || [];
+            const employeeList = document.getElementById('employeeList');
+            employeeList.innerHTML = '';
+            employees.forEach(emp => {
+                const empDiv = document.createElement('div');
+                empDiv.classList.add('employee');
+                empDiv.innerHTML = `Name: ${emp.name} <br> Email: ${emp.email} <br> Position: ${emp.position}`;
+                employeeList.appendChild(empDiv);
+            });
+        }
+        
+        function addEmployee() {
+            const name = document.getElementById('empName').value;
+            const email = document.getElementById('empEmail').value;
+            const position = document.getElementById('empPosition').value;
+            if (name && email && position) {
+                const employees = JSON.parse(localStorage.getItem('employees')) || [];
+                employees.push({ id: employees.length + 1, name, email, position });
+                localStorage.setItem('employees', JSON.stringify(employees));
+                document.getElementById('empName').value = '';
+                document.getElementById('empEmail').value = '';
+                document.getElementById('empPosition').value = '';
+                loadEmployees();
+            }
+        }
+        window.onload = loadEmployees;
+    </script>
 </body>
 </html>
-
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-    header {
-        background: #333;
-        color: #fff;
-        padding: 10px;
-        display: flex;
-        justify-content: space-between;
-    }
-    nav ul {
-        list-style: none;
-        padding: 0;
-    }
-    nav ul li {
-        display: inline;
-        margin-left: 20px;
-    }
-    nav ul li a {
-        color: #fff;
-        text-decoration: none;
-    }
-    #hero {
-        background: url('hero.jpg') no-repeat center center/cover;
-        height: 400px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        text-align: center;
-    }
-    section {
-        padding: 20px;
-    }
-    .merchandise-grid {
-        display: flex;
-        flex-wrap: wrap;
-    }
-    .item {
-        flex: 1 1 300px;
-        margin: 10px;
-    }
-    footer {
-        background: #333;
-        color: #fff;
-        padding: 10px;
-        text-align: center;
-    }
-</style>
-
 <script>
-    function saveEmail() {
-        const email = document.getElementById('emailInput').value;
-        if (validateEmail(email)) {
-            let emailList = JSON.parse(localStorage.getItem('emails')) || [];
-            emailList.push(email);
-            localStorage.setItem('emails', JSON.stringify(emailList));
-            document.getElementById('confirmationMessage').innerText = 'Thank you for subscribing!';
-        } else {
-            alert('Please enter a valid email address.');
-        }
-    }
+    // Unit tests for the employee management function
+    function testAddEmployee() {
+        localStorage.clear();
+        const employeesBefore = JSON.parse(localStorage.getItem('employees')) || [];
+        console.assert(employeesBefore.length === 0, 'Test Failed: Initial employee count should be 0.');
 
-    function validateEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(String(email).toLowerCase());
+        localStorage.setItem('employees', JSON.stringify([{ id: 1, name: 'John Doe', email: 'john@example.com', position: 'Developer' }]));
+        const employeesAfter = JSON.parse(localStorage.getItem('employees')) || [];
+        console.assert(employeesAfter.length === 1, 'Test Failed: Employee count should be 1 after adding an employee.');
+        console.assert(employeesAfter[0].name === 'John Doe', 'Test Failed: Employee name should be John Doe.');
+        
+        console.log('All Tests Passed.');
     }
-
-    function playMusic() {
-        displayMusic();
-    }
-
-    function displayMusic() {
-        const musicList = JSON.parse(localStorage.getItem('musicTracks')) || [];
-        const musicPlayer = document.getElementById('musicPlayer');
-        if (musicList.length > 0) {
-            musicPlayer.src = musicList[0]; // Assuming first track is to be played
-            musicPlayer.play();
-        } else {
-            alert('No music tracks available.');
-        }
-    }
-</script>
-
-<script>
-    // Unit Tests
-    function testEmailValidation() {
-        console.assert(validateEmail('test@example.com') === true, 'Test Case 1 Failed');
-        console.assert(validateEmail('invalid-email') === false, 'Test Case 2 Failed');
-        console.assert(validateEmail('another.test@domain.com') === true, 'Test Case 3 Failed');
-        console.assert(validateEmail('@domain.com') === false, 'Test Case 4 Failed');
-        console.log('All tests completed.');
-    }
-    
-    testEmailValidation();
+    testAddEmployee();
 </script>
