@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimalist Todo List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        #task-input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 250px;
+            margin-right: 10px;
+        }
+        #add-task-btn {
+            padding: 10px 20px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #task-list {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+            max-width: 300px;
+            margin-top: 20px;
+        }
+        .task-item {
+            background: #ffffff;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #filter {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Minimalist Todo List</h1>
+    <div>
+        <input type="text" id="task-input" placeholder="Enter task title" />
+        <button id="add-task-btn">Add Task</button>
+    </div>
+    <ul id="task-list"></ul>
+    <div id="filter">
+        <button onclick="filterTasks('all')">Show All</button>
+        <button onclick="filterTasks('completed')">Show Completed</button>
+        <button onclick="filterTasks('incomplete')">Show Incomplete</button>
+    </div>
+
+    <script>
+        document.getElementById('add-task-btn').addEventListener('click', addTask);
+
+        function loadTasks() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.forEach(task => {
+                addToTaskList(task.title, task.completed);
+            });
+        }
+
+        function addTask() {
+            const taskInput = document.getElementById('task-input');
+            const taskTitle = taskInput.value.trim();
+            if (!taskTitle) return alert("Task title cannot be empty");
+            addToLocalStorage(taskTitle);
+            addToTaskList(taskTitle, false);
+            taskInput.value = '';
+        }
+
+        function addToLocalStorage(title) {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.push({ title, completed: false });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function addToTaskList(title, completed) {
+            const taskList = document.getElementById('task-list');
+            const taskItem = document.createElement('li');
+            taskItem.className = 'task-item';
+            taskItem.innerHTML = `
+                <input type="checkbox" ${completed ? 'checked' : ''} onchange="toggleCompletion(this, '${title}')">
+                <span>${title}</span>
+                <button class="delete-btn" onclick="deleteTask('${title}')">Delete</button>
+            `;
+            taskList.appendChild(taskItem);
+        }
+
+        function toggleCompletion(checkbox, title) {
+            const tasks = JSON.parse(localStorage.getItem('tasks'));
+            const task = tasks.find(task => task.title === title);
+            task.completed = checkbox.checked;
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function deleteTask(title) {
+            const tasks = JSON.parse(localStorage.getItem('tasks'));
+            const updatedTasks = tasks.filter(task => task.title !== title);
+            localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+            loadTaskList();
+        }
+
+        function filterTasks(status) {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const filteredTasks = status === 'all' ? tasks : tasks.filter(task => status === 'completed' ? task.completed : !task.completed);
+            document.getElementById('task-list').innerHTML = '';
+            filteredTasks.forEach(task => addToTaskList(task.title, task.completed));
+        }
+
+        loadTasks();
+    </script>
+</body>
+</html>
