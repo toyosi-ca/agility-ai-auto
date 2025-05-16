@@ -3,152 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimalistic To-Do List</title>
+    <title>Cake E-commerce</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
         }
-        h1 {
+        header {
+            background-color: #FFD700;
+            padding: 1rem;
             text-align: center;
         }
-        #task-form {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
+        nav {
+            margin: 0.5rem 0;
         }
-        #task-input, #due-date-input {
-            width: 45%;
-            padding: 10px;
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+            color: black;
         }
-        #add-task-btn {
-            padding: 10px 15px;
-            background-color: #28a745;
+        .hero {
+            background-image: url('hero-cakes.jpg');
+            height: 250px;
+            background-size: cover;
+            position: relative;
+        }
+        .hero h1 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             color: white;
-            border: none;
-            cursor: pointer;
         }
-        #task-list {
-            list-style-type: none;
-            padding: 0;
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 10px;
+            padding: 20px;
         }
-        .task-item {
-            background: white;
-            margin: 10px 0;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .product {
+            border: 1px solid #ddd;
             border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background: white;
+            padding: 10px;
+            text-align: center;
         }
-        .task-item.completed {
-            text-decoration: line-through;
-            background-color: #d4edda;
+        .product img {
+            width: 100%;
+            height: auto;
         }
-        .button-group button {
-            margin-left: 10px;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #333;
+            color: white;
         }
     </style>
 </head>
 <body>
-    <h1>Minimalistic To-Do List</h1>
-    <div id="task-form">
-        <input type="text" id="task-input" placeholder="Enter new task" required />
-        <input type="date" id="due-date-input" required />
-        <button id="add-task-btn">Add Task</button>
+
+<header>
+    <h1>Welcome to Cake Haven</h1>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#products">Products</a>
+        <a href="#about">About Us</a>
+        <a href="#cart">Cart</a>
+        <a href="#contact">Contact</a>
+    </nav>
+</header>
+
+<div class="hero">
+    <h1>Delicious Cakes Await!</h1>
+</div>
+
+<section id="products">
+    <h2>Product Catalog</h2>
+    <div class="product-grid" id="productGrid">
+        <!-- Products will be dynamically populated here -->
     </div>
-    <ul id="task-list"></ul>
+</section>
 
-    <script>
-        const taskInput = document.getElementById('task-input');
-        const dueDateInput = document.getElementById('due-date-input');
-        const addTaskBtn = document.getElementById('add-task-btn');
-        const taskList = document.getElementById('task-list');
+<footer>
+    <p>&copy; 2023 Cake Haven. All Rights Reserved.</p>
+</footer>
 
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+<script>
+    const products = [
+        { id: 1, name: 'Chocolate Cake', price: 5000, description: 'Rich chocolate flavor', image: 'chocolate-cake.jpg' },
+        { id: 2, name: 'Vanilla Cake', price: 4000, description: 'Classic vanilla taste', image: 'vanilla-cake.jpg' },
+        { id: 3, name: 'Red Velvet Cake', price: 6000, description: 'Smooth and creamy frosting', image: 'red-velvet-cake.jpg' }
+    ];
 
-        function loadTasks() {
-            tasks.forEach(task => {
-                renderTask(task);
-            });
+    function loadProducts() {
+        const grid = document.getElementById('productGrid');
+        products.forEach(product => {
+            const productDiv = document.createElement('div');
+            productDiv.classList.add('product');
+            productDiv.innerHTML = `
+                <img src="${product.image}" alt="${product.name}">
+                <h3>${product.name}</h3>
+                <p>${product.description}</p>
+                <p>Price: N${product.price}</p>
+                <button onclick="addToCart(${product.id})">Add to Cart</button>
+            `;
+            grid.appendChild(productDiv);
+        });
+    }
+
+    function addToCart(productId) {
+        const cart = JSON.parse(localStorage.getItem('cart')) || {};
+        if (cart[productId]) {
+            cart[productId] += 1;
+        } else {
+            cart[productId] = 1;
         }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        alert('Product added to cart!');
+    }
 
-        function saveTasks() {
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
+    loadProducts();
+</script>
 
-        function renderTask(task) {
-            const li = document.createElement('li');
-            li.className = 'task-item' + (task.completed ? ' completed' : '');
-            li.innerHTML = `
-                <span>${task.title} (Due: ${task.dueDate})</span>
-                <div class="button-group">
-                    <button onclick="toggleComplete('${task.id}')">✓</button>
-                    <button onclick="editTask('${task.id}')">Edit</button>
-                    <button onclick="deleteTask('${task.id}')">Delete</button>
-                </div>`;
-            taskList.appendChild(li);
-        }
-
-        function addTask() {
-            const taskTitle = taskInput.value.trim();
-            const dueDate = dueDateInput.value;
-
-            if (!taskTitle || !dueDate) return;
-
-            const task = {
-                id: new Date().getTime().toString(),
-                title: taskTitle,
-                dueDate: dueDate,
-                completed: false
-            };
-
-            tasks.push(task);
-            saveTasks();
-            taskInput.value = '';
-            dueDateInput.value = '';
-            taskList.innerHTML = '';
-            loadTasks();
-        }
-
-        function toggleComplete(taskId) {
-            tasks = tasks.map(task => {
-                if (task.id === taskId) {
-                    task.completed = !task.completed;
-                }
-                return task;
-            });
-            saveTasks();
-            renderTasks();
-        }
-
-        function editTask(taskId) {
-            const task = tasks.find(t => t.id === taskId);
-            taskInput.value = task.title;
-            dueDateInput.value = task.dueDate;
-            deleteTask(taskId);
-        }
-
-        function deleteTask(taskId) {
-            tasks = tasks.filter(task => task.id !== taskId);
-            saveTasks();
-            renderTasks();
-        }
-
-        function renderTasks() {
-            taskList.innerHTML = '';
-            loadTasks();
-        }
-
-        addTaskBtn.addEventListener('click', addTask);
-        window.addEventListener('DOMContentLoaded', loadTasks);
-    </script>
 </body>
 </html>
