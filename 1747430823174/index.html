@@ -3,77 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HR System</title>
+    <title>Gideon Peters - Landing Page</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; }
-        header { background-color: #4CAF50; padding: 1em; text-align: center; color: white; }
-        main { padding: 20px; }
-        button { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; }
-        button:hover { background-color: #45a049; }
-        input[type="text"], input[type="email"], textarea { width: 100%; padding: 10px; margin: 10px 0; }
-        .employee-list { margin-top: 20px; }
-        .employee { border: 1px solid #ccc; padding: 10px; margin: 5px 0; }
-        .form-container { max-width: 600px; margin: auto; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .hero {
+            background-image: url('path-to-hero-image.jpg');
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+        .cta-button {
+            background-color: #4169E1;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .biography, .music, .gallery, .contact {
+            padding: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .gallery .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        @media (max-width: 600px) {
+            .cta-button {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
-    <header>
-        <h1>HR Management System</h1>
-    </header>
-    <main>
-        <div class="form-container">
-            <h2>Add Employee</h2>
-            <input type="text" id="empName" placeholder="Name" required>
-            <input type="email" id="empEmail" placeholder="Email" required>
-            <input type="text" id="empPosition" placeholder="Position" required>
-            <button onclick="addEmployee()">Add Employee</button>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Gideon Peters</h1>
+            <p>Your go-to artist for soulful tunes</p>
+            <a href="link-to-music-platform" class="cta-button">Listen Now</a>
         </div>
-        <div class="employee-list" id="employeeList"></div>
-    </main>
+    </section>
+    
+    <section class="biography">
+        <h2>Biography</h2>
+        <p id="bio-short">Short biography...</p>
+        <button id="expand-bio">Read More</button>
+        <div id="bio-full" style="display: none;">Full biography...</div>
+    </section>
+    
+    <section class="music">
+        <h2>Listen to My Music</h2>
+        <iframe src="link-to-embedded-music-player" width="300" height="200"></iframe>
+        <p>
+            <a href="link-to-apples-music">Apple Music</a> | 
+            <a href="link-to-youtube">YouTube</a>
+        </p>
+    </section>
+    
+    <section class="gallery">
+        <h2>Gallery</h2>
+        <div class="grid">
+            <img src="optimized-image1.jpg" alt="Gideon performing" />
+            <img src="optimized-image2.jpg" alt="Collaboration" />
+        </div>
+    </section>
+    
+    <section class="contact">
+        <h2>Contact Me</h2>
+        <form id="contact-form">
+            <input type="text" placeholder="Your Name" required />
+            <input type="email" placeholder="Your Email" required />
+            <textarea placeholder="Your Message" required></textarea>
+            <button type="submit">Send</button>
+        </form>
+        <p>Follow me on social media</p>
+    </section>
+    
     <script>
-        function loadEmployees() {
-            const employees = JSON.parse(localStorage.getItem('employees')) || [];
-            const employeeList = document.getElementById('employeeList');
-            employeeList.innerHTML = '';
-            employees.forEach(emp => {
-                const empDiv = document.createElement('div');
-                empDiv.classList.add('employee');
-                empDiv.innerHTML = `Name: ${emp.name} <br> Email: ${emp.email} <br> Position: ${emp.position}`;
-                employeeList.appendChild(empDiv);
-            });
-        }
-        
-        function addEmployee() {
-            const name = document.getElementById('empName').value;
-            const email = document.getElementById('empEmail').value;
-            const position = document.getElementById('empPosition').value;
-            if (name && email && position) {
-                const employees = JSON.parse(localStorage.getItem('employees')) || [];
-                employees.push({ id: employees.length + 1, name, email, position });
-                localStorage.setItem('employees', JSON.stringify(employees));
-                document.getElementById('empName').value = '';
-                document.getElementById('empEmail').value = '';
-                document.getElementById('empPosition').value = '';
-                loadEmployees();
+        document.getElementById('contact-form').addEventListener('input', function() {
+            localStorage.setItem('contact_form', JSON.stringify({
+                name: document.querySelector('input[type="text"]').value,
+                email: document.querySelector('input[type="email"]').value,
+                message: document.querySelector('textarea').value
+            }));
+        });
+
+        window.onload = function() {
+            const savedData = JSON.parse(localStorage.getItem('contact_form'));
+            if (savedData) {
+                document.querySelector('input[type="text"]').value = savedData.name;
+                document.querySelector('input[type="email"]').value = savedData.email;
+                document.querySelector('textarea').value = savedData.message;
             }
-        }
-        window.onload = loadEmployees;
+        };
+
+        document.getElementById('expand-bio').addEventListener('click', function() {
+            const bioFull = document.getElementById('bio-full');
+            bioFull.style.display = bioFull.style.display === 'none' ? 'block' : 'none';
+            this.textContent = this.textContent === 'Read More' ? 'Read Less' : 'Read More';
+        });
     </script>
 </body>
 </html>
-<script>
-    // Unit tests for the employee management function
-    function testAddEmployee() {
-        localStorage.clear();
-        const employeesBefore = JSON.parse(localStorage.getItem('employees')) || [];
-        console.assert(employeesBefore.length === 0, 'Test Failed: Initial employee count should be 0.');
 
-        localStorage.setItem('employees', JSON.stringify([{ id: 1, name: 'John Doe', email: 'john@example.com', position: 'Developer' }]));
-        const employeesAfter = JSON.parse(localStorage.getItem('employees')) || [];
-        console.assert(employeesAfter.length === 1, 'Test Failed: Employee count should be 1 after adding an employee.');
-        console.assert(employeesAfter[0].name === 'John Doe', 'Test Failed: Employee name should be John Doe.');
+unit tests for the frontend code:
+
+<script>
+    // Simple unit tests for the contact form
+    function testLocalStorage() {
+        // Setup
+        localStorage.clear();
+        const input = {
+            name: 'Test Name',
+            email: 'test@example.com',
+            message: 'This is a test message.'
+        };
+        document.querySelector('input[type="text"]').value = input.name;
+        document.querySelector('input[type="email"]').value = input.email;
+        document.querySelector('textarea').value = input.message;
+
+        // Simulate input event
+        document.getElementById('contact-form').dispatchEvent(new Event('input'));
+
+        const retrievedData = JSON.parse(localStorage.getItem('contact_form'));
         
-        console.log('All Tests Passed.');
+        console.assert(retrievedData.name === input.name, 'Name should match');
+        console.assert(retrievedData.email === input.email, 'Email should match');
+        console.assert(retrievedData.message === input.message, 'Message should match');
+        
+        console.log('Local Storage Test Passed');
     }
-    testAddEmployee();
+
+    function testBioExpandCollapse() {
+        // Setup
+        document.getElementById('expand-bio').click();
+        console.assert(document.getElementById('bio-full').style.display === 'block', 'Bio should be expanded');
+        
+        document.getElementById('expand-bio').click();
+        console.assert(document.getElementById('bio-full').style.display === 'none', 'Bio should be collapsed');
+
+        console.log('Biography Expand/Collapse Test Passed');
+    }
+
+    // Running tests
+    testLocalStorage();
+    testBioExpandCollapse();
 </script>

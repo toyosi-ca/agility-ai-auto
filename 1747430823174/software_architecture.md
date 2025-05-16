@@ -1,125 +1,153 @@
-# Software Architecture Document for HR System
+---
 
-## Document Version: 1.0  
-## Date: [Insert Date]  
-## Author: [Your Name]  
+**Software Architecture Document for Gideon Peters Landing Page**
 
-### Table of Contents
+**1. Introduction**
 
-1. **Introduction**
-   - 1.1 Objectives
-   - 1.2 Architecture Overview
-
-2. **System Components**
-   - 2.1 User Interface
-   - 2.2 Local Storage Management
-   - 2.3 Business Logic
-
-3. **Detailed Feature Implementation**
-   - 3.1 HR Management Module
-   - 3.2 Recruitment Management Module
-   - 3.3 Employee Database Module
-   - 3.4 Performance Management Module
-   - 3.5 Reporting and Analytics Module
-
-4. **Security Considerations**
-   
-5. **Usability and Performance Indicators**
-
-6. **Future Enhancements**
+This document outlines the frontend architectural design solution for the landing page dedicated to musician Gideon Peters. The design adheres to the guidelines stipulated in the Product Requirements Document (PRD) provided. Significant focus is placed on creating a visually appealing, responsive interface while ensuring optimal load times and usability.
 
 ---
 
-### 1. Introduction
+**2. Technical Overview**
 
-#### 1.1 Objectives  
-To provide a detailed yet straightforward architecture for the HR system that leverages local storage to manage data persistence efficiently while ensuring an intuitive user experience for HR managers, employees, and recruiters.
+- **Language & Frameworks:**  
+  * HTML5, CSS3, JavaScript (ES6)  
+  * Responsive Framework: Bootstrap (or custom CSS for lightweight version)  
+  * CSS pre-processors: SASS (optional for advanced styling)  
 
-#### 1.2 Architecture Overview  
-The HR system is designed as a single-page application (SPA) strictly leveraging frontend technologies (HTML, CSS, and JavaScript) and utilizing the browser’s Local Storage API for data persistence. This architecture ensures fast data retrieval and storage without requiring backend services.
+- **Local Storage API:**  
+  Using Local Storage to save user interactions, such as saving any message drafts in the contact form, enabling users to return to their input if they navigate away.  
+
+- **Image Optimization:**  
+  Images to be compressed using tools like TinyPNG or similar. Use of "srcset" for responsive images to deliver appropriate sizes based on device capabilities.
 
 ---
 
-### 2. System Components
+**3. Architectural Components**
 
-#### 2.1 User Interface  
-The user interface will be organized into the following sections:
-- Employee Self-Service Portal: Allowing employees to manage their personal data and submit feedback.
-- HR Management Dashboard: A comprehensive view for HR managers to manage employee records and recruitment.
-- Recruitment Management Dashboard: For recruiters to handle job postings and track applications.
-- Performance Management Interface: For setting performance goals and collecting reviews.
+### 3.1 Page Structure
 
-#### 2.2 Local Storage Management  
-The application will use the Local Storage API to store data locally within the user's browser. Data will be structured in JSON format and segregated by modules:
-- `employees`: For storing employee records.
-- `applications`: For recruitment data.
-- `performance`: For performance appraisals.
-  
-Example structure:  
-```json
-{
-  "employees": [
-    { "id": 1, "name": "John Doe", "position": "Developer", "email": "john@example.com" }
-  ],
-  "applications": [
-    { "jobId": 101, "candidateName": "Jane Smith", "status": "Applied" }
-  ],
-  "performance": [
-    { "employeeId": 1, "goals": [], "feedback": [] }
-  ]
-}
+#### 3.1.1 Hero Section
+- **Elements:**  
+  - Full-width background image or slider featuring Gideon with a tagline.  
+  - Prominent Call-to-Action (CTA) button linking to streaming services.  
+- **HTML Structure:**  
+```html
+<section class="hero">
+  <div class="hero-content">
+    <h1>Gideon Peters</h1>
+    <p>Your go-to artist for soulful tunes</p>
+    <a href="link-to-music-platform" class="cta-button">Listen Now</a>
+  </div>
+</section>
 ```
 
-#### 2.3 Business Logic  
-Business logic will be implemented within JavaScript functions that interact with the Local Storage to handle CRUD operations. For instance:
-- **Add Employee**: Validate input and add employee data to Local Storage.
-- **Update Profile**: Retrieve employee data for updates and save changes.
-- **Post Job Listing**: Enable recruiters to enter job details and save them in Local Storage.
+#### 3.1.2 Biography Section
+- **Elements:**  
+  - Readable, expandable biography in a clean layout.  
+- **HTML Structure:**  
+```html
+<section class="biography">
+  <h2>Biography</h2>
+  <p id="bio-short">Short biography...</p>
+  <button id="expand-bio">Read More</button>
+  <div id="bio-full" style="display: none;">Full biography...</div>
+</section>
+```
+
+#### 3.1.3 Music Section
+- **Elements:**  
+  - Embedded music player for top songs with links to platforms.  
+- **HTML Structure:**  
+```html
+<section class="music">
+  <h2>Listen to My Music</h2>
+  <iframe src="link-to-embedded-music-player"></iframe>
+  <p>
+    <a href="link-to-apples-music">Apple Music</a> | 
+    <a href="link-to-youtube">YouTube</a>
+  </p>
+</section>
+```
+
+#### 3.1.4 Gallery Section
+- **Elements:**  
+  - Grid-based layout for images showing performances, collaborations.  
+- **HTML Structure:**  
+```html
+<section class="gallery">
+  <h2>Gallery</h2>
+  <div class="grid">
+    <img src="optimized-image1.jpg" alt="Gideon performing" />
+    <img src="optimized-image2.jpg" alt="Collaboration" />
+  </div>
+</section>
+```
+
+#### 3.1.5 Contact Section
+- **Elements:**  
+  - Contact form with input fields and a submit button.  
+- **HTML Structure:**  
+```html
+<section class="contact">
+  <h2>Contact Me</h2>
+  <form id="contact-form">
+    <input type="text" placeholder="Your Name" required />
+    <input type="email" placeholder="Your Email" required />
+    <textarea placeholder="Your Message" required></textarea>
+    <button type="submit">Send</button>
+  </form>
+  <p>Follow me on social media</p>
+</section>
+```
+
+### 3.2 Styling
+- **CSS Setup:**  
+  - Use a royal blue primary color (`#4169E1`), with complementary colors for text and background.  
+  - Typography can be sourced from Google Fonts to ensure modern and legible text.  
+
+### 3.3 Responsiveness
+- **Media Queries:**  
+  - Use media queries to adjust layout styles based on screen width to ensure a fully responsive design.
 
 ---
 
-### 3. Detailed Feature Implementation
+**4. Local Storage Implementation**
 
-#### 3.1 HR Management Module  
-- Functions for managing employee details (CRUD).
-- Role-based access to different sections of the application.
+- Capture form input in local storage to allow users to recover their messages in case they navigate away:
+  
+```javascript
+// Save draft in local storage
+document.getElementById('contact-form').addEventListener('input', function() {
+    localStorage.setItem('contact_form', JSON.stringify({
+        name: document.querySelector('input[type="text"]').value,
+        email: document.querySelector('input[type="email"]').value,
+        message: document.querySelector('textarea').value
+    }));
+});
 
-#### 3.2 Recruitment Management Module  
-- Job posting with an input form.
-- Application tracking with filters for status updates.
-
-#### 3.3 Employee Database Module  
-- Search functionality to filter employees.
-- Display employee details with edit capabilities.
-
-#### 3.4 Performance Management Module  
-- Interface for setting and reviewing performance goals.
-- Feedback forms for periodic reviews.
-
-#### 3.5 Reporting and Analytics Module  
-- Simple reports generated based on Local Storage data, with visual representations using libraries such as Chart.js or D3.js.
-
----
-
-### 4. Security Considerations  
-- User authentication and session management could be implemented using tokens stored in Local Storage.
-- Ensure access control is defined by roles for viewing and editing sensitive data.
-- Data should be validated and sanitized to prevent injection attacks.
+// Retrieve draft from local storage
+window.onload = function() {
+    const savedData = JSON.parse(localStorage.getItem('contact_form'));
+    if (savedData) {
+        document.querySelector('input[type="text"]').value = savedData.name;
+        document.querySelector('input[type="email"]').value = savedData.email;
+        document.querySelector('textarea').value = savedData.message;
+    }
+};
+```
 
 ---
 
-### 5. Usability and Performance Indicators  
-- Responsive design for compatibility with various devices.
-- Fast load times and smooth transitions to enhance user experience.
-- Implementing feedback mechanisms to continuously gather user insights.
+**5. Performance Considerations**
+- **Load Time:** Ensure page load time is under 3 seconds by optimizing images and minifying CSS/JS, removing any unused CSS rules.
+- **SEO Considerations:** Ensure proper title tags, descriptive alt text for images, and structured metadata to enhance SEO performance.
 
 ---
 
-### 6. Future Enhancements  
-- Support for offline access and synchronization with a server when connectivity is available.
-- Integration with third-party APIs for additional HR functionalities.
-- Advanced reporting features using comprehensive data analytics.
+**6. Conclusion**
+This architectural document presents a clear, responsible approach for the development of Gideon Peters's landing page. By focusing the design purely on frontend technologies and ensuring the ease of implementation while considering user experience, scalability, and performance, we can meet the outlined project goals seamlessly.
 
 ---
 
-This architecture ensures a scalable, maintainable, and user-friendly HR system that fulfills all outlined product requirements and objectives while leveraging the benefits of local storage in the browser.
+This completes the software architecture document for the landing page for Gideon Peters, designed to promote his music effectively and engagingly.
