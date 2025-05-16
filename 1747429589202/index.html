@@ -1,0 +1,170 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Scientific Calculator</title>  
+    <style>  
+        body {  
+            font-family: Arial, sans-serif;  
+            display: flex;  
+            justify-content: center;  
+            align-items: center;  
+            height: 100vh;  
+            background-color: #f4f4f4;  
+            margin: 0;  
+        }  
+        #calculator {  
+            border: 1px solid #ddd;  
+            border-radius: 10px;  
+            padding: 20px;  
+            background: white;  
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);  
+        }  
+        #display {  
+            width: 100%;  
+            height: 50px;  
+            font-size: 24px;  
+            text-align: right;  
+            margin-bottom: 10px;  
+            padding: 10px;  
+            border: 1px solid #ddd;  
+            border-radius: 5px;  
+            background-color: #e9e9e9;  
+        }  
+        button {  
+            width: 60px;  
+            height: 60px;  
+            margin: 5px;  
+            font-size: 20px;  
+            border: none;  
+            border-radius: 5px;  
+            background-color: #007BFF;  
+            color: white;  
+            cursor: pointer;  
+            transition: background 0.3s;  
+        }  
+        button:hover {  
+            background-color: #0056b3;  
+        }  
+        #history {  
+            margin-top: 20px;  
+            padding: 10px;  
+            border: 1px solid #ddd;  
+            border-radius: 5px;  
+            background-color: #f9f9f9;  
+        }  
+    </style>  
+</head>  
+<body>  
+    <div id="calculator">  
+        <input type="text" id="display" readonly />  
+        <div id="buttons">  
+            <button onclick="appendToDisplay('7')">7</button>  
+            <button onclick="appendToDisplay('8')">8</button>  
+            <button onclick="appendToDisplay('9')">9</button>  
+            <button onclick="setOperation('/')">/</button>  
+            <button onclick="appendToDisplay('4')">4</button>  
+            <button onclick="appendToDisplay('5')">5</button>  
+            <button onclick="appendToDisplay('6')">6</button>  
+            <button onclick="setOperation('*')">*</button>  
+            <button onclick="appendToDisplay('1')">1</button>  
+            <button onclick="appendToDisplay('2')">2</button>  
+            <button onclick="appendToDisplay('3')">3</button>  
+            <button onclick="setOperation('-')">-</button>  
+            <button onclick="appendToDisplay('0')">0</button>  
+            <button onclick="calculateResult()">=</button>  
+            <button onclick="clearDisplay()">C</button>  
+            <button onclick="setOperation('+')">+</button>  
+        </div>  
+        <div id="history"></div>  
+    </div>  
+    <script>  
+        let currentInput = '';  
+        let operation = '';  
+        let firstOperand = null;  
+        let secondOperand = null;  
+  
+        function appendToDisplay(value) {  
+            currentInput += value;  
+            updateDisplay();  
+        }  
+  
+        function setOperation(op) {  
+            if (currentInput === '' && firstOperand === null) return;  
+            if (firstOperand === null) {  
+                firstOperand = parseFloat(currentInput);  
+            } else if (currentInput !== '') {  
+                secondOperand = parseFloat(currentInput);  
+                firstOperand = calculate(firstOperand, secondOperand, operation);  
+            }  
+            operation = op;  
+            currentInput = '';  
+            updateDisplay();  
+        }  
+  
+        function calculateResult() {  
+            if (currentInput === '' || operation === '' || firstOperand === null) return;  
+            secondOperand = parseFloat(currentInput);  
+            const result = calculate(firstOperand, secondOperand, operation);  
+            saveToHistory(`${firstOperand} ${operation} ${secondOperand} = ${result}`);  
+            currentInput = result.toString();  
+            operation = '';  
+            firstOperand = null;  
+            secondOperand = null;  
+            updateDisplay();  
+        }  
+  
+        function calculate(first, second, op) {  
+            switch (op) {  
+                case '+': return first + second;  
+                case '-': return first - second;  
+                case '*': return first * second;  
+                case '/': return first / second;  
+                default: return second;  
+            }  
+        }  
+  
+        function clearDisplay() {  
+            currentInput = '';  
+            firstOperand = null;  
+            secondOperand = null;  
+            operation = '';  
+            updateDisplay();  
+        }  
+  
+        function updateDisplay() {  
+            document.getElementById('display').value = currentInput;  
+            updateHistory();  
+        }  
+  
+        function saveToHistory(entry) {  
+            const history = getHistory();  
+            history.push(entry);  
+            localStorage.setItem('calcHistory', JSON.stringify(history));  
+            updateHistory();  
+        }  
+  
+        function getHistory() {  
+            const history = localStorage.getItem('calcHistory');  
+            return history ? JSON.parse(history) : [];  
+        }  
+  
+        function updateHistory() {  
+            const historyContainer = document.getElementById('history');  
+            historyContainer.innerHTML = '<strong>History:</strong><br>' + getHistory().join('<br>');  
+        }  
+    </script>  
+</body>  
+</html>  
+
+// Unit Tests  
+function testCalculator() {  
+    console.assert(calculate(1, 2, '+') === 3, 'Test 1 Failed');  
+    console.assert(calculate(2, 1, '-') === 1, 'Test 2 Failed');  
+    console.assert(calculate(2, 3, '*') === 6, 'Test 3 Failed');  
+    console.assert(calculate(6, 2, '/') === 3, 'Test 4 Failed');  
+    console.log('All tests passed!');  
+}  
+testCalculator();  
+// Note: Additional tests can be added for functionality such as history and edge cases.
