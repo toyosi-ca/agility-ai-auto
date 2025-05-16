@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #container {
+            width: 300px;
+            margin: auto;
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        input {
+            width: 80%;
+            margin: 10px 0;
+            padding: 8px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Temperature Converter</h1>
+        <input type="number" id="celsius" placeholder="Celsius (°C)">
+        <input type="number" id="fahrenheit" placeholder="Fahrenheit (°F)">
+        <input type="number" id="kelvin" placeholder="Kelvin (K)">
+        <button id="convert">Convert</button>
+        <button id="clear">Clear</button>
+        <div id="results" class="hidden"></div>
+    </div>
+    <script>
+        document.getElementById('convert').onclick = function() {
+            const celsius = parseFloat(document.getElementById('celsius').value);
+            const fahrenheit = parseFloat(document.getElementById('fahrenheit').value);
+            const kelvin = parseFloat(document.getElementById('kelvin').value);
+            let results = '';
+
+            if (!isNaN(celsius)) {
+                results += `Fahrenheit: ${(celsius * (9/5) + 32).toFixed(2)} °F<br>`;
+                results += `Kelvin: ${(celsius + 273.15).toFixed(2)} K<br>`;
+                localStorage.setItem('lastCelsius', celsius);
+            } else if (!isNaN(fahrenheit)) {
+                results += `Celsius: ${((fahrenheit - 32) * (5/9)).toFixed(2)} °C<br>`;
+                results += `Kelvin: ${(fahrenheit - 32) * (5/9) + 273.15.toFixed(2)} K<br>`;
+                localStorage.setItem('lastFahrenheit', fahrenheit);
+            } else if (!isNaN(kelvin)) {
+                results += `Celsius: ${(kelvin - 273.15).toFixed(2)} °C<br>`;
+                results += `Fahrenheit: ${((kelvin - 273.15) * (9/5) + 32).toFixed(2)} °F<br>`;
+                localStorage.setItem('lastKelvin', kelvin);
+            }
+            document.getElementById('results').innerHTML = results;
+            document.getElementById('results').classList.remove('hidden');
+        };
+
+        document.getElementById('clear').onclick = function() {
+            document.getElementById('celsius').value = '';
+            document.getElementById('fahrenheit').value = '';
+            document.getElementById('kelvin').value = '';
+            document.getElementById('results').innerText = '';
+            document.getElementById('results').classList.add('hidden');
+            localStorage.clear();
+        };
+
+        window.onload = function() {
+            document.getElementById('celsius').value = localStorage.getItem('lastCelsius') || '';
+            document.getElementById('fahrenheit').value = localStorage.getItem('lastFahrenheit') || '';
+            document.getElementById('kelvin').value = localStorage.getItem('lastKelvin') || '';
+        };
+    </script>
+</body>
+</html>
