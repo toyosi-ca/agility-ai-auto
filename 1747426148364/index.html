@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Hello World</h1> <!-- The main title of the page -->
+        <button id="saveButton">Save in Local Storage</button>
+        <button id="loadButton">Load from Local Storage</button>
+        <p id="storageMessage"></p>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+<style>
+body {
+    background-color: #f0f0f0; /* Light background */
+    font-family: Arial, sans-serif; /* Simple font */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center; /* Center alignment */
+    align-items: center; /* Center alignment */
+    height: 100vh; /* Full height */
+}
+
+h1 {
+    color: #333; /* Dark text color for contrast */
+    font-weight: bold; /* Bold text */
+}
+
+button {
+    margin: 10px; /* Spacing around buttons */
+    padding: 10px 20px; /* Padding for button */
+    background-color: #007BFF; /* Bootstrap blue color */
+    color: white; /* White text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+p {
+    color: #333; /* Dark text for message display */
+}
+</style>
+
+<script>
+document.getElementById('saveButton').addEventListener('click', function() {
+    const message = document.querySelector('h1').innerText;
+    localStorage.setItem('savedMessage', message);
+    document.getElementById('storageMessage').innerText = 'Message saved!';
+});
+
+document.getElementById('loadButton').addEventListener('click', function() {
+    const savedMessage = localStorage.getItem('savedMessage');
+    if (savedMessage) {
+        document.getElementById('storageMessage').innerText = 'Loaded message: ' + savedMessage;
+    } else {
+        document.getElementById('storageMessage').innerText = 'No message found in storage.';
+    }
+});
+</script>
+
+<script>
+// Unit Tests
+(function() {
+    let successfulTests = 0;
+    let failedTests = 0;
+
+    function testSaveToLocalStorage() {
+        localStorage.clear(); // Clear before test
+        document.querySelector('h1').innerText = 'Hello World Test';
+        document.getElementById('saveButton').click();
+        const result = localStorage.getItem('savedMessage');
+        if (result === 'Hello World Test') {
+            console.log('Test passed: Save to Local Storage');
+            successfulTests++;
+        } else {
+            console.log('Test failed: Save to Local Storage');
+            failedTests++;
+        }
+    }
+
+    function testLoadFromLocalStorage() {
+        localStorage.setItem('savedMessage', 'Hello World Loaded Test');
+        document.getElementById('loadButton').click();
+        const message = document.getElementById('storageMessage').innerText;
+        if (message === 'Loaded message: Hello World Loaded Test') {
+            console.log('Test passed: Load from Local Storage');
+            successfulTests++;
+        } else {
+            console.log('Test failed: Load from Local Storage');
+            failedTests++;
+        }
+    }
+
+    function reportResults() {
+        console.log(`Tests completed: ${successfulTests + failedTests}`);
+        console.log(`Successful tests: ${successfulTests}`);
+        console.log(`Failed tests: ${failedTests}`);
+    }
+
+    // Run Tests
+    testSaveToLocalStorage();
+    testLoadFromLocalStorage();
+    reportResults();
+})();
+</script>
