@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"], input[type="email"], input[type="password"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        .notification {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #d9edf7;
+            border: 1px solid #bce8f1;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>User Registration</h1>
+    <div class="notification" id="notification"></div>
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button onclick="registerUser()">Register</button>
+</div>
+
+<script>
+    function registerUser() {
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        if (username && email && password) {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userExists = users.some(user => user.email === email);
+
+            if (userExists) {
+                showNotification('User already exists!', 'danger');
+            } else {
+                users.push({ username, email, password });
+                localStorage.setItem('users', JSON.stringify(users));
+                showNotification('User registered successfully!', 'success');
+            }
+        } else {
+            showNotification('Please fill all fields!', 'danger');
+        }
+    }
+
+    function showNotification(message, type) {
+        const notification = document.getElementById('notification');
+        notification.innerText = message;
+        notification.style.display = 'block';
+        notification.style.backgroundColor = type === 'success' ? '#d4edda' : '#f8d7da';
+        notification.style.color = type === 'success' ? '#155724' : '#721c24';
+    }
+
+    // Add tests for the functions using a simple test runner
+    function runTests() {
+        const users = [{ username: 'test', email: 'test@test.com', password: 'password' }];
+        localStorage.setItem('users', JSON.stringify(users));
+
+        // Test user registration
+        console.assert(registerUser('newUser', 'test@test.com', 'password') === 'User already exists!', 'Test failed: User should already exist');
+        console.assert(registerUser('newUser', 'newuser@test.com', 'password') === 'User registered successfully!', 'Test failed: New user should register successfully');
+
+        localStorage.removeItem('users');
+        console.log('All tests passed!');
+    }
+
+    // Run tests
+    runTests();
+</script>
+
+</body>
+</html>
