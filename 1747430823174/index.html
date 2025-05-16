@@ -3,184 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pong Game</title>
+    <title>Book Store Inventory</title>
     <style>
         body {
-            margin: 0;
-            background-color: black;
-            color: white;
             font-family: Arial, sans-serif;
-        }
-        #game-canvas {
-            display: none; /* Hidden by default */
-        }
-        #start-screen, #end-screen, #instructions {
+            margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        header {
+            background: #007bff;
+            color: white;
+            padding: 1rem;
+            width: 100%;
+            text-align: center;
+        }
+        main {
+            padding: 20px;
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        input, select {
+            margin: 5px 0;
+            padding: 10px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .book-item {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .search-bar {
+            margin-bottom: 20px;
+        }
+        footer {
+            margin-top: auto;
+            padding: 10px;
+            text-align: center;
+            background: #007bff;
+            color: white;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <div id="start-screen">
-        <h1>Pong</h1>
-        <button id="play-button">Play</button>
-        <button id="instructions-button">Instructions</button>
-    </div>
-    <canvas id="game-canvas" width="800" height="600"></canvas>
-    <div id="end-screen">
-        <h2 id="winner"></h2>
-        <button id="play-again-button">Play Again</button>
-    </div>
-    <div id="instructions">
-        <h2>Instructions</h2>
-        <p>Player 1: W (up), S (down)</p>
-        <p>Player 2: ↑ (up), ↓ (down)</p>
-        <button id="back-to-start-button">Back to Start</button>
-    </div>
-    <script>
-        const canvas = document.getElementById('game-canvas');
-        const ctx = canvas.getContext('2d');
-        const startScreen = document.getElementById('start-screen');
-        const endScreen = document.getElementById('end-screen');
-        const instructionsScreen = document.getElementById('instructions');
-        const winnerText = document.getElementById('winner');
-        const playButton = document.getElementById('play-button');
-        const playAgainButton = document.getElementById('play-again-button');
-        const instructionsButton = document.getElementById('instructions-button');
-        const backToStartButton = document.getElementById('back-to-start-button');
 
-        let paddleWidth = 10, paddleHeight = 100;
-        let player1Y = (canvas.height - paddleHeight) / 2, player2Y = (canvas.height - paddleHeight) / 2;
-        let ballX = canvas.width / 2, ballY = canvas.height / 2, ballRadius = 10;
-        let ballSpeedX = 5, ballSpeedY = 5;
-        let player1Score = 0, player2Score = 0;
-        let winningScore = getWinningScore();
-        let isGameRunning = false;
+<header>
+    <h1>Book Store Inventory</h1>
+</header>
 
-        playButton.addEventListener('click', startGame);
-        playAgainButton.addEventListener('click', resetGame);
-        instructionsButton.addEventListener('click', showInstructions);
-        backToStartButton.addEventListener('click', backToStart);
+<main>
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search by title, author or ISBN..." oninput="searchBooks()">
+    </div>
+    <form id="bookForm" onsubmit="addBook(event)">
+        <input type="hidden" id="bookId">
+        <input type="text" id="title" placeholder="Book Title" required>
+        <input type="text" id="author" placeholder="Author Name" required>
+        <select id="category" required>
+            <option value="">Select Category</option>
+            <option value="Fiction">Fiction</option>
+            <option value="Non-Fiction">Non-Fiction</option>
+            <option value="Science">Science</option>
+            <option value="Fantasy">Fantasy</option>
+        </select>
+        <input type="text" id="isbn" placeholder="ISBN Number" required>
+        <input type="number" id="quantity" placeholder="Available Quantity" required>
+        <button type="submit">Add Book</button>
+    </form>
+    <div id="bookList"></div>
+</main>
 
-        document.addEventListener('keydown', function(event) {
-            switch(event.key) {
-                case 'w':
-                    if (player1Y > 0) player1Y -= 10;
-                    break;
-                case 's':
-                    if (player1Y < canvas.height - paddleHeight) player1Y += 10;
-                    break;
-                case 'ArrowUp':
-                    if (player2Y > 0) player2Y -= 10;
-                    break;
-                case 'ArrowDown':
-                    if (player2Y < canvas.height - paddleHeight) player2Y += 10;
-                    break;
-            }
+<footer>
+    <p>&copy; 2023 Book Store Inventory</p>
+</footer>
+
+<script>
+    const bookForm = document.getElementById('bookForm');
+    const bookListEl = document.getElementById('bookList');
+    const searchInput = document.getElementById('searchInput');
+
+    function loadBooks() {
+        const books = JSON.parse(localStorage.getItem('books')) || [];
+        displayBooks(books);
+    }
+
+    function displayBooks(books) {
+        bookListEl.innerHTML = '';
+        books.forEach(book => {
+            const bookDiv = document.createElement('div');
+            bookDiv.className = 'book-item';
+            bookDiv.innerHTML = `
+                <div>
+                    <strong>${book.title}</strong> by ${book.author} (ISBN: ${book.isbn}) - ${book.category} - Quantity: ${book.quantity}
+                </div>
+                <div>
+                    <button onclick="editBook('${book.id}')">Edit</button>
+                    <button onclick="deleteBook('${book.id}')">Delete</button>
+                </div>
+            `;
+            bookListEl.appendChild(bookDiv);
         });
+    }
 
-        function startGame() {
-            winningScore = getWinningScore();
-            player1Score = 0;
-            player2Score = 0;
-            isGameRunning = true;
-            canvas.style.display = 'block';
-            startScreen.style.display = 'none';
-            endScreen.style.display = 'none';
-            instructionsScreen.style.display = 'none';
-            gameLoop();
+    function searchBooks() {
+        const searchQuery = searchInput.value.toLowerCase();
+        const books = JSON.parse(localStorage.getItem('books')) || [];
+        const filteredBooks = books.filter(book =>
+            book.title.toLowerCase().includes(searchQuery) ||
+            book.author.toLowerCase().includes(searchQuery) ||
+            book.isbn.includes(searchQuery)
+        );
+        displayBooks(filteredBooks);
+    }
+
+    function addBook(event) {
+        event.preventDefault();
+        const id = document.getElementById('bookId').value || Date.now().toString();
+        const title = document.getElementById('title').value;
+        const author = document.getElementById('author').value;
+        const category = document.getElementById('category').value;
+        const isbn = document.getElementById('isbn').value;
+        const quantity = document.getElementById('quantity').value;
+
+        const books = JSON.parse(localStorage.getItem('books')) || [];
+        const bookIndex = books.findIndex(book => book.id === id);
+
+        if (bookIndex > -1) {
+            books[bookIndex] = { id, title, author, category, isbn, quantity };
+        } else {
+            books.push({ id, title, author, category, isbn, quantity });
         }
 
-        function resetGame() {
-            startGame();
-        }
+        localStorage.setItem('books', JSON.stringify(books));
+        loadBooks();
+        bookForm.reset();
+    }
 
-        function showInstructions() {
-            isGameRunning = false;
-            startScreen.style.display = 'none';
-            instructionsScreen.style.display = 'flex';
-        }
+    function deleteBook(id) {
+        const books = JSON.parse(localStorage.getItem('books')) || [];
+        const updatedBooks = books.filter(book => book.id !== id);
+        localStorage.setItem('books', JSON.stringify(updatedBooks));
+        loadBooks();
+    }
 
-        function backToStart() {
-            instructionsScreen.style.display = 'none';
-            startScreen.style.display = 'flex';
-        }
+    function editBook(id) {
+        const books = JSON.parse(localStorage.getItem('books')) || [];
+        const book = books.find(book => book.id === id);
+        document.getElementById('bookId').value = book.id;
+        document.getElementById('title').value = book.title;
+        document.getElementById('author').value = book.author;
+        document.getElementById('category').value = book.category;
+        document.getElementById('isbn').value = book.isbn;
+        document.getElementById('quantity').value = book.quantity;
+    }
 
-        function gameLoop() {
-            if (!isGameRunning) return;
-
-            updateGame();
-            drawGame();
-
-            if (player1Score < winningScore && player2Score < winningScore) {
-                requestAnimationFrame(gameLoop);
-            } else {
-                endGame();
-            }
-        }
-
-        function updateGame() {
-            ballX += ballSpeedX;
-            ballY += ballSpeedY;
-
-            if (ballY + ballRadius > canvas.height || ballY - ballRadius < 0) {
-                ballSpeedY = -ballSpeedY;
-            }
-
-            if (ballX - ballRadius < paddleWidth && ballY > player1Y && ballY < player1Y + paddleHeight) {
-                ballSpeedX = -ballSpeedX;
-            }
-
-            if (ballX + ballRadius > canvas.width - paddleWidth && ballY > player2Y && ballY < player2Y + paddleHeight) {
-                ballSpeedX = -ballSpeedX;
-            }
-
-            if (ballX + ballRadius < 0) {
-                player2Score++;
-                resetBall();
-            }
-            if (ballX - ballRadius > canvas.width) {
-                player1Score++;
-                resetBall();
-            }
-        }
-
-        function drawGame() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, player1Y, paddleWidth, paddleHeight);
-            ctx.fillRect(canvas.width - paddleWidth, player2Y, paddleWidth, paddleHeight);
-            ctx.beginPath();
-            ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.font = '24px Arial';
-            ctx.fillText(`Player 1: ${player1Score}`, 50, 50);
-            ctx.fillText(`Player 2: ${player2Score}`, canvas.width - 150, 50);
-        }
-
-        function resetBall() {
-            ballX = canvas.width / 2;
-            ballY = canvas.height / 2;
-            ballSpeedX = -ballSpeedX;
-        }
-
-        function endGame() {
-            isGameRunning = false;
-            canvas.style.display = 'none';
-            endScreen.style.display = 'flex';
-            winnerText.textContent = player1Score === winningScore ? 'Player 1 Wins!' : 'Player 2 Wins!';
-        }
-
-        function setWinningScore(score) {
-            localStorage.setItem('winningScore', score);
-        }
-
-        function getWinningScore() {
-            return parseInt(localStorage.getItem('winningScore')) || 5; // Default score is 5
-        }
-    </script>
+    window.onload = loadBooks;
+</script>
 </body>
-</html>
+</html> 
+
+// Unit Tests (not visible on the browser)
+describe('Book Store Inventory Tests', () => {
+    beforeEach(() => {
+        localStorage.clear();
+    });
+
+    test('Add a new book', () => {
+        document.getElementById('title').value = 'Test Book';
+        document.getElementById('author').value = 'Test Author';
+        document.getElementById('category').value = 'Fiction';
+        document.getElementById('isbn').value = '123456789';
+        document.getElementById('quantity').value = 10;
+        
+        addBook(new Event('submit'));
+
+        const books = JSON.parse(localStorage.getItem('books'));
+        expect(books.length).toBe(1);
+        expect(books[0].title).toBe('Test Book');
+    });
+
+    test('Delete a book', () => {
+        addTestBook();
+        const books = JSON.parse(localStorage.getItem('books'));
+        const bookId = books[0].id;
+        deleteBook(bookId);
+        
+        const updatedBooks = JSON.parse(localStorage.getItem('books'));
+        expect(updatedBooks.length).toBe(0);
+    });
+
+    function addTestBook() {
+        document.getElementById('title').value = 'Test Book';
+        document.getElementById('author').value = 'Test Author';
+        document.getElementById('category').value = 'Fiction';
+        document.getElementById('isbn').value = '123456789';
+        document.getElementById('quantity').value = 10;
+        addBook(new Event('submit'));
+    }
+
+    test('Edit a book', () => {
+        addTestBook();
+        const books = JSON.parse(localStorage.getItem('books'));
+        const bookId = books[0].id;
+
+        editBook(bookId);
+        
+        document.getElementById('title').value = 'Updated Book';
+        addBook(new Event('submit'));
+
+        const updatedBooks = JSON.parse(localStorage.getItem('books'));
+        expect(updatedBooks[0].title).toBe('Updated Book');
+    });
+
+    test('Search functionality', () => {
+        addTestBook();
+        const books = JSON.parse(localStorage.getItem('books'));
+        expect(books.length).toBe(1);
+        
+        document.getElementById('searchInput').value = 'Test Book';
+        searchBooks();
+
+        const displayedBooks = bookListEl.children.length;
+        expect(displayedBooks).toBe(1);
+    });
+});
