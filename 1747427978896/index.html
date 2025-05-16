@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Automation Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background: #35424a;
+            color: #ffffff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background: #e8491d;
+        }
+        nav a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+        }
+        nav a:hover {
+            background-color: #c74113;
+        }
+        main {
+            padding: 20px;
+        }
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-input {
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .button {
+            background: #35424a;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background: #303b44;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Test Automation Tool</h1>
+</header>
+<nav>
+    <a href="#" onclick="showSection('automated')">Automated Tests</a>
+    <a href="#" onclick="showSection('manual')">Manual Tests</a>
+    <a href="#" onclick="showSection('reporting')">Reporting</a>
+    <a href="#" onclick="showSection('userManagement')">User Management</a>
+</nav>
+<main>
+    <div id="automated" class="form-container">
+        <h2>Create Automated Test</h2>
+        <input type="text" id="autoTestName" class="form-input" placeholder="Test Name" />
+        <textarea id="autoTestScript" class="form-input" placeholder="Test Script (e.g. Java, JavaScript, Python)"></textarea>
+        <button class="button" onclick="saveAutomatedTest()">Save Test</button>
+    </div>
+    <div id="manual" class="form-container" style="display:none;">
+        <h2>Create Manual Test</h2>
+        <input type="text" id="manualTestName" class="form-input" placeholder="Test Name" />
+        <textarea id="manualTestSteps" class="form-input" placeholder="Test Steps"></textarea>
+        <button class="button" onclick="saveManualTest()">Save Test</button>
+    </div>
+    <div id="reporting" class="form-container" style="display:none;">
+        <h2>Test Reporting</h2>
+        <button class="button" onclick="generateReport()">Generate Report</button>
+        <div id="reportResults"></div>
+    </div>
+    <div id="userManagement" class="form-container" style="display:none;">
+        <h2>User Management</h2>
+        <input type="text" id="username" class="form-input" placeholder="Username" />
+        <button class="button" onclick="addUser()">Add User</button>
+    </div>
+</main>
+<footer>
+    <p>&copy; 2023 Test Automation Tool</p>
+</footer>
+
+<script>
+    function showSection(sectionId) {
+        document.querySelectorAll('.form-container').forEach((el) => {
+            el.style.display = 'none';
+        });
+        document.getElementById(sectionId).style.display = 'block';
+    }
+
+    function saveToLocalStorage(key, data) {
+        const existingData = JSON.parse(localStorage.getItem(key)) || [];
+        existingData.push(data);
+        localStorage.setItem(key, JSON.stringify(existingData));
+    }
+
+    function saveAutomatedTest() {
+        const testName = document.getElementById('autoTestName').value;
+        const testScript = document.getElementById('autoTestScript').value;
+        if (testName && testScript) {
+            saveToLocalStorage('automatedTests', { name: testName, script: testScript });
+            alert('Automated test saved!');
+            document.getElementById('autoTestName').value = '';
+            document.getElementById('autoTestScript').value = '';
+        } else {
+            alert('Please fill out both fields.');
+        }
+    }
+
+    function saveManualTest() {
+        const testName = document.getElementById('manualTestName').value;
+        const testSteps = document.getElementById('manualTestSteps').value;
+        if (testName && testSteps) {
+            saveToLocalStorage('manualTests', { name: testName, steps: testSteps });
+            alert('Manual test saved!');
+            document.getElementById('manualTestName').value = '';
+            document.getElementById('manualTestSteps').value = '';
+        } else {
+            alert('Please fill out both fields.');
+        }
+    }
+
+    function generateReport() {
+        const automatedTests = JSON.parse(localStorage.getItem('automatedTests')) || [];
+        const manualTests = JSON.parse(localStorage.getItem('manualTests')) || [];
+        let report = '<h3>Test Report</h3><h4>Automated Tests:</h4>';
+        automatedTests.forEach(test => {
+            report += `<p>Name: ${test.name}, Script: ${test.script}</p>`;
+        });
+        report += '<h4>Manual Tests:</h4>';
+        manualTests.forEach(test => {
+            report += `<p>Name: ${test.name}, Steps: ${test.steps}</p>`;
+        });
+        document.getElementById('reportResults').innerHTML = report;
+    }
+
+    function addUser() {
+        const username = document.getElementById('username').value;
+        if (username) {
+            saveToLocalStorage('users', { name: username });
+            alert('User added!');
+            document.getElementById('username').value = '';
+        } else {
+            alert('Please enter a username.');
+        }
+    }
+</script>
+</html>
